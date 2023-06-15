@@ -1,0 +1,45 @@
+import { useContext } from "react";
+import ButtonAppBar from "../components/ButtonAppBar";
+import { ParticipantSection } from "./ParticipantSection";
+
+import {
+  PageContainer,
+} from "../styles";
+//import AddCeremonyPage from "./AddCeremony";
+import Modal from "@material-ui/core/Modal";
+import { CeremonyPage } from "./CeremonyPage";
+import Footer from './../components/Footer';
+import AboutPanel from './../components/AboutPanel';
+import './styles.css';
+import { Box } from "@material-ui/core";
+import CircuitsPanel from "../components/CircuitsPanel";
+import state from '../contexts/state';
+import { State } from "../types/ceremony";
+import { observer } from "mobx-react-lite";
+
+export const LandingPage = observer(() => {
+    const { ui } = useContext(state) as State;
+
+    return (
+      <>
+        <ButtonAppBar />
+        <PageContainer>
+          <Box style={{ height: '608px' }} >
+            <ParticipantSection />
+          </Box>
+          <AboutPanel />
+          <div style={{ height: '140px' }} />
+          <CircuitsPanel  />
+          <Modal
+            open={ui.openModal}
+            onClose={ui.closeModal}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            {(<CeremonyPage onClose={ui.closeModal} />)}
+          </Modal>
+        </PageContainer>
+        <Footer />
+      </>
+  );
+});
