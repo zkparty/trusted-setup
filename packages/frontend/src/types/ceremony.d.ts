@@ -186,7 +186,7 @@ export interface Queue {
   contributionHashes: string[];
   loadingInitial: boolean;
   inQueue: boolean;
-  isFInished: boolean;
+  isFinished: boolean;
 
   contributionUpdates: any[];
 

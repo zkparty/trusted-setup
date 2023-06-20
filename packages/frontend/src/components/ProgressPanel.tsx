@@ -1,5 +1,4 @@
 import { Box, Grid, LinearProgress, LinearProgressProps, Typography } from '@material-ui/core';
-import * as React from 'react';
 import { useContext } from 'react';
 import {
   accentColor,
@@ -12,16 +11,13 @@ import {
   subtleText,
   darkerBackground,
 } from "../styles";
-//import { ComputeDispatchContext, ComputeStateContext, ComputeStatus, Step } from '../state/ComputeStateManager';
 import { Player } from '@lottiefiles/react-lottie-player';
 import styled from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import AttestationPanel from './AttestationPanel';
-import { ContributionState } from '../types/ceremony';
 import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
-import Queue from '../contexts/Ceremony';
-import { State } from '../types/ceremony';
+import { State, Queue } from '../types/ceremony';
 
 const StyledHeader = styled.div`
   font-family: Inconsolata;
@@ -98,19 +94,17 @@ const queueText = (queue: number) => {
   } 
 }
 
-const queueStatus = (contribState: ContributionState) => {
-  let queue = 0;
+const queueStatus = (queueLength: number) => {
   let dots = '';
   try {
-    queue = contribState.queueIndex - contribState.currentIndex; 
-    dots = ' .'.repeat(Math.max(queue, 0));
+    dots = ' .'.repeat(Math.max(queueLength, 0));
   } catch (err) {
     if (err instanceof Error)
     console.warn(`Wait queue error: ${err.message}`);
   }
   return (
     <div>
-      <NormalBodyText>{queueText(queue)}</NormalBodyText>
+      <NormalBodyText>{queueText(queueLength)}</NormalBodyText>
       <div style={{ color: accentColor, textAlign: 'right' }}>{dots}</div>
     </div>
   );
@@ -122,16 +116,16 @@ interface ProgressProps {
 
 export const CeremonyProgress = (props: any) => {
   const { ceremony } = useContext(state) as State;
-  const { circuits, contributionCount, step, computeStatus, contributionState } = ceremony;
-  const cctCount = circuits.length;
-  const ceremony = contributionState ? contributionState.ceremony : undefined;
+  const { ceremonyState, contributionUpdates, inQueue, contributing } = ceremony;
+  const cctCount = ceremonyState?.circuitStats.length;
+  const ceremonyx = ceremonyState ? contributionState.ceremony : undefined;
   const cctNum = ceremony ? ceremony.sequence || contributionCount : contributionCount;
   const ceremonyPct = (cctCount>0) ? 100 * contributionCount / cctCount : 0;
   const { format } = props;
 
   const prefix = (format && format === 'bar') ?
     (<NormalBodyText style={{ paddingRight: '20px' }} >
-      {`C${cctNum} ${stepText(step, computeStatus)}`}
+      {`C${cctNum} ${stepText(inQueue, contributing)}`}
     </NormalBodyText>)
     :
     (<></>);
@@ -144,7 +138,7 @@ export const CeremonyProgress = (props: any) => {
           variant="determinate" 
           value={ceremonyPct} 
           size='normal'
-          barColor={(step === Step.QUEUED) ? subtleText : accentColor}
+          barColor={(inQueue) ? subtleText : accentColor}
         />
       </Box>
       <Box minWidth={35}>
@@ -158,8 +152,11 @@ export const CeremonyProgress = (props: any) => {
 
 const StepProgress = observer(() => {
   const { ceremony } = useContext(state) as State;
+  const cctNum = ceremony.contributionHashes.length;
+  const cctCount = ceremony.ceremonyState?.circuitStats.length;
+  const progressPct = cctNum / cctCount * 100;
   return (
-    <StyledProgressBar variant="determinate" value={ceremony.progressPct} size='small' />
+    <StyledProgressBar variant="determinate" value={progressPct} size='small' />
   );
 });
 
@@ -176,14 +173,13 @@ const Animation = () => {
 }
 
 const status = (ceremony: Queue) => {
-  const { circuits, contributionCount, contributionState, step, computeStatus, progress } = ceremony;
-  //const ceremony = contributionState ? contributionState.ceremony : undefined;
-  const cctNum = ceremony ? ceremony.sequence || 0 : 0;
-  const cctCount = circuits.length;
+  const { ceremonyState, queueLength, contributionHashes, contributionUpdates, inQueue, contributing } = ceremony;
+  const cctNum = contributionHashes.length;
+  const cctCount = ceremonyState?.circuitStats.length;
   let header = '';
   let body1 = (<></>);
   let body2 = (<></>);
-  if (step === Step.COMPLETE) {
+  if (cctNum >= cctCount) {
     header = 'Contribution Complete.';
     body1 = (
       <div>
@@ -198,25 +194,20 @@ const status = (ceremony: Queue) => {
     body2 = (<AttestationPanel style={{ marginTop: '80px' }}/>);
   } else {
     let statusCell = (<></>);
-    if (step === Step.QUEUED) {
-      // Circuit breaker to avoid 'you are -1 in line'
-      if (!contributionState.queueIndex ||
-         !contributionState.currentIndex ||
-         contributionState.currentIndex > contributionState.queueIndex) {
-           // Trigger a restart of the circuit
-           dispatch({type: 'SET_STEP', data: Step.INITIALISED});
-      }
-
+    if (inQueue) {
       header = 'You are in line.';
-      statusCell = queueStatus(contributionState);
-    } else {
+      statusCell = queueStatus(queueLength);
+    } else if (contributing) {
       header = 'Contribution Active.';
       statusCell = (
         <div>
-          {stepText(step, computeStatus)}
+          {contributionUpdates[contributionUpdates.length - 1]}
           <StepProgress />
         </div>
       );
+    } else {
+      header = 'Waiting ...';
+      statusCell = (<></>)
     }
     body1 = (
       <div style={{ lineHeight: '0px', width: 'max-content' }}>
@@ -277,7 +268,7 @@ const ProgressPanel = observer(() => {
               </StyledHeader>
             </Grid>
             <Grid item>
-              <VisibilitySensor onChange={isVisible => ui.setProgressVisibility(isVisible)}>
+              <VisibilitySensor onChange={(isVisible: boolean) => ui.setProgressVisibility(isVisible)}>
                 {content.body1}
               </VisibilitySensor>
             </Grid>
