@@ -10,7 +10,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/MenuOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import { ZKTitle } from "./Title";
-import { AuthStateContext, AuthDispatchContext } from "../state/AuthContext";
 import {
   accentColor,
   secondAccent,
@@ -25,7 +24,6 @@ import Options from './Options';
 import { ComputeStateContext, Step } from '../state/ComputeStateManager';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { CeremonyProgress } from './ProgressPanel';
-import { useSelectionContext } from '../state/SelectionContext';
 import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
 import { State } from '../types/ceremony';
