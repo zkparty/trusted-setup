@@ -36,26 +36,23 @@ const StyledHeader = styled.div`
 `
 
 interface ProgressBarProps extends LinearProgressProps {
-  size: string,
-  barColor: string,
+  barColor?: string,
+  $size?: string,
 }
 
-const StyledProgressBar = styled(LinearProgress).attrs((props: ProgressBarProps) => ({
-  size: props.size || 'normal',
-  barColor: props.barColor || accentColor,
-}))`
-  padding-top: ${ ({ size }) => {return (size === 'small') ? '0px' : '5px';} }; 
+const StyledProgressBar = styled(LinearProgress)<ProgressBarProps>`
+  padding-top: ${ ({$size}) => {return ($size === 'small') ? '0px' : '5px';} }; 
   border-radius: 20px; 
   background-color: ${darkerBackground};
   border: 2px solid ${darkerBackground};
-  width: ${ ({ size }) => { 
-    if (size === 'normal') return '491px'; 
+  width: ${ ({$size}) => { 
+    if ($size === 'normal') return '491px'; 
     else return 'default' } }; 
 
   & > .MuiLinearProgress-barColorPrimary {
     border-radius: 20px;
-    background-color: ${({barColor}) => barColor};
-    border-color: ${({barColor}) => barColor};
+    background-color: ${({barColor}) => barColor || accentColor};
+    border-color: ${({barColor}) => barColor || accentColor};
   }
 
   &.MuiLinearProgress-root.MuiLinearProgress-colorPrimary {
@@ -63,24 +60,13 @@ const StyledProgressBar = styled(LinearProgress).attrs((props: ProgressBarProps)
   }
 `;
 
-const stepText = (step: Step, computeStatus: ComputeStatus): string => {
-  switch (step) {
-    case Step.ACKNOWLEDGED: 
-    case Step.INITIALISED: 
-    case Step.ENTROPY_COLLECTED: {
-        return 'Preparing';
-    }
-    case Step.QUEUED: 
-    case Step.WAITING: {
-        return 'Waiting';
-    }
-    case Step.RUNNING: {
-      if (!computeStatus.downloaded) return 'Downloading'
-      else if (!computeStatus.computed) return 'Computing'
-      else if (!computeStatus.uploaded) return 'Uploading'
-      return '?';
-    }
-    default: return step.toString();
+const stepText = (inQueue: boolean, contributing: boolean): string => {
+  if (inQueue) {
+    return "Waiting"
+  } else if (contributing) {
+    return "Computing"
+  } else {
+    return "Preparing"
   }
 }
 
@@ -118,7 +104,7 @@ export const CeremonyProgress = (props: any) => {
   const { ceremony } = useContext(state) as State;
   const { ceremonyState, contributionUpdates, inQueue, contributing } = ceremony;
   const cctCount = ceremonyState?.circuitStats.length;
-  const ceremonyx = ceremonyState ? contributionState.ceremony : undefined;
+  const ceremonyx = ceremonyState ? ceremonyState.contributionState.ceremony : undefined;
   const cctNum = ceremony ? ceremony.sequence || contributionCount : contributionCount;
   const ceremonyPct = (cctCount>0) ? 100 * contributionCount / cctCount : 0;
   const { format } = props;
@@ -137,7 +123,7 @@ export const CeremonyProgress = (props: any) => {
         <StyledProgressBar 
           variant="determinate" 
           value={ceremonyPct} 
-          size='normal'
+          $size="normal"
           barColor={(inQueue) ? subtleText : accentColor}
         />
       </Box>
@@ -156,7 +142,7 @@ const StepProgress = observer(() => {
   const cctCount = ceremony.ceremonyState?.circuitStats.length;
   const progressPct = cctNum / cctCount * 100;
   return (
-    <StyledProgressBar variant="determinate" value={progressPct} size='small' />
+    <StyledProgressBar variant="determinate" value={progressPct} $size='small' />
   );
 });
 
