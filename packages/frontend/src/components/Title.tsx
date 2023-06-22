@@ -26,7 +26,7 @@ interface TitleProps {
 export class ZKTitle extends React.Component<TitleProps> {
   refreshInterval: number;
   secondsOfLit: number;
-  interval: number | undefined; 
+  interval: NodeJS.Timeout | undefined; 
   titleText: string;
 
   constructor(props: TitleProps) {
@@ -44,7 +44,7 @@ export class ZKTitle extends React.Component<TitleProps> {
   };
 
   onClick = () => {
-    if (this.interval == null) {
+    if (!this.interval) {
       this.interval = setInterval(() => {
         this.setState({
           actualText: this.getRandomText()

@@ -1,26 +1,29 @@
-import * as React from 'react';
 import { useContext, useState } from 'react';
-import { CalendarIcon, LightningIcon, PopOutIcon, ScaleIcon, SecureIcon, StarIcon, } from '../icons';
-import PoolIcon from '@material-ui/icons/Pool';
-import { AuthStateContext } from '../state/AuthContext';
-import { accentColor, darkerBackground, inverseText, lighterBackground, NormalBodyText, PanelTitle, StyledButton, SubtleBody, subtleText, AuthButton, AuthButtonText } from '../styles';
+import { PopOutIcon } from '../icons';
+import { 
+  PanelTitle, 
+  AuthButton, 
+  AuthButtonText 
+} from '../styles';
 import About from './About';
 import ViewLog from './ViewLog';
-import { ComputeStateContext } from '../state/ComputeStateManager';
 
 import env from '../env';
+import { observer } from 'mobx-react-lite';
+import state from '../contexts/state';
+import { State } from '../types/ceremony';
 
-export default function AboutPanel(props: any) {
+const AboutPanel = observer((props: any) => {
+  const { ceremony } = useContext(state) as State;
+  // TODO Use state.ui?
   const [modalOpen, setModalOpen] = useState(false);
-  const authState = useContext(AuthStateContext);
-  const computeState = useContext(ComputeStateContext);
 
   const closeModal = () => {setModalOpen(false)};
   const openModal = () => {
     setModalOpen(true);
   }
 
-  const { project } = computeState;
+  const { project, authenticated } = ceremony;
 
   const leftPanel = (
     <div style={{
@@ -30,7 +33,7 @@ export default function AboutPanel(props: any) {
       marginBottom: '50px',
       marginRight: '8xp',
     }}>
-      <PanelTitle>{`about ${project?.shortName || env.projectName}`}</PanelTitle>
+      <PanelTitle>{`about ${project || env.projectName}`}</PanelTitle>
       {  }
       <div style={{ display: 'flex' }}>
         <AuthButton
@@ -48,22 +51,12 @@ export default function AboutPanel(props: any) {
     </div>
   )
 
-  const Feature = (props: any) => {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '42px' }}>
-        <div>{props.icon}</div>
-        <div style={{ width: '36px' }} />
-        <div>{props.children}</div>
-      </div>
-    )
-  }
-
   const aboutModal = (modalOpen) ?
     <ViewLog
       open={modalOpen}
       close={closeModal}
-      content={(<About isParticipant={authState.isLoggedIn} />)}
-      title={`About the ${project?.shortName || env.projectName} trusted setup`} />
+      content={(<About isParticipant={authenticated()} />)}
+      title={`About the ${project || env.projectName} trusted setup`} />
   :
     (<></>);
 
@@ -74,4 +67,6 @@ export default function AboutPanel(props: any) {
       {aboutModal}
     </div>
   );
-}
+});
+
+export default AboutPanel;

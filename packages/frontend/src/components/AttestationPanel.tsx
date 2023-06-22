@@ -8,7 +8,6 @@ import {
   lighterBackground,
 } from "../styles";
 import styled from "styled-components";
-//import { ComputeStateContext } from '../state/ComputeStateManager';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { observer } from "mobx-react-lite";
 import { State } from '../types/ceremony';
@@ -55,18 +54,19 @@ const tweetText = (settings: any, url: string): string => {
 
 const AttestationPanel = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
+  const { contributionText, project } = ceremony;
 
   let text=(<></>);
-  if (ceremony.project) {
-    if (ceremony.summaryGistUrl) {
+  if (project) {
+    if (contributionText()) {
       text = (
         <div style={{ display: 'flex' }}>
           <StyledAccentButton
-            href={tweetText(ceremony.project, ceremony.summaryGistUrl)} target='twitter' >
+            href={tweetText(ceremony.project, contributionText())} target='twitter' >
                 <TwitterIcon fontSize='large' />
                 Share your attestation
           </StyledAccentButton>
-          <StyledButton href={ceremony.summaryGistUrl} target='attestation' >
+          <StyledButton href={contributionText()} target='attestation' >
             View your summary
           </StyledButton>
         </div>

@@ -1,17 +1,16 @@
 import { useContext } from "react";
 import ButtonAppBar from "../components/ButtonAppBar";
-import { ParticipantSection } from "./ParticipantSection";
+import ParticipantSection from "./ParticipantSection";
 
 import {
   PageContainer,
 } from "../styles";
 //import AddCeremonyPage from "./AddCeremony";
-import Modal from "@material-ui/core/Modal";
 import { CeremonyPage } from "./CeremonyPage";
 import Footer from './../components/Footer';
 import AboutPanel from './../components/AboutPanel';
 import './styles.css';
-import { Box } from "@material-ui/core";
+import { Box, Modal } from "@mui/material";
 import CircuitsPanel from "../components/CircuitsPanel";
 import state from '../contexts/state';
 import { State } from "../types/ceremony";

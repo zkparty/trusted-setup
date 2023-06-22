@@ -201,6 +201,7 @@ export interface Queue {
   stopKeepAlive();
   auth();
   authenticated();
+  contributionText();
 }
 
 declare interface State {

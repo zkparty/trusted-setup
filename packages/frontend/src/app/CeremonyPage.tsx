@@ -1,7 +1,6 @@
-import { useState, useRef } from "react";
-import * as React from "react";
+import { useState, useRef, useContext } from "react";
 import styled from "styled-components";
-import { DataGrid, GridColDef, GridCellParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridCellParams } from '@mui/x-data-grid';
 import {
   textColor,
   lighterBackground,
@@ -10,19 +9,13 @@ import {
   CeremonyTitle,
   Center
 } from "../styles";
-import { Ceremony, CeremonyEvent, Contribution, ContributionSummary, Participant } from "../types/ceremony";
-import { createStyles, makeStyles, Theme, Typography, withStyles, Container } from "@material-ui/core";
-import Fab from '@material-ui/core/Fab';
-import EditIcon from '@material-ui/icons/Edit';
-import CloseIcon from '@material-ui/icons/Close';
+import { CeremonyEvent, State } from "../types/ceremony";
+import { Typography } from "@material-ui/core";
 import moment from "moment";
 import './styles.css';
 import ViewLog from '../components/ViewLog';
-import { AuthStateContext } from "../state/AuthContext";
-import { SelectedCeremonyContext, useSelectionContext } from "../state/SelectionContext";
 import { useSnackbar } from "notistack";
-import { ceremonyStatus } from "../utils/utils";
-import state from '../state/state';
+import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
 
 const CeremonyDetailsTable = styled.table`
@@ -64,76 +57,17 @@ const CeremonyDetailsSubSection = styled.div`
 `;
 
 export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
-  const { ceremony } = React.useContext(state)
+  const { ceremony, ui } = useContext(state) as State
   const [loaded, setLoaded] = useState<boolean>(false);
-  //const [ceremony, setCeremony] = useState<null | Ceremony>(null);
-  //const [contributions, setContributions] = useState<ContributionSummary[]>([]);
-  //const ceremonyListenerUnsub = useRef<(() => void) | null>(null);
-  //const contributionListenerUnsub = useRef<(() => void) | null>(null);
-  //const eventsListenerUnsub = useRef<(() => void) | null>(null);
   const loadingContributions = useRef(false);
-  const [selection, dispatch] = useSelectionContext();
   const { enqueueSnackbar } = useSnackbar();
   const viewLogContent = useRef('');
   const viewLogIndex = useRef('');
   const [viewLogOpen, setOpenViewLog] = useState(false);
 
-  let { ceremonyId } = selection;
-  console.log(`have id ${ceremonyId}`);
-
-  const statusUpdate = (event: CeremonyEvent) => {
+   const statusUpdate = (event: CeremonyEvent) => {
     enqueueSnackbar(event.message);
   };
-
-  // const refreshCeremony = async () => {
-  //   const c = ceremonyId ? await getCeremony(ceremonyId) : undefined;
-  //   if (c !== undefined) setCeremony(c);
-  // };
-
-  // const updateContribution = (doc: ContributionSummary, changeType: string, oldIndex?: number) => {
-  //   // A contribution has been updated
-  //   //console.debug(`contribution update: ${doc.queueIndex} ${changeType} ${oldIndex}`);
-  //   let newContributions = ceremony.contributions; // TODO fix this
-  //   switch (changeType) {
-  //     case 'added': {
-  //       newContributions.push(doc);
-  //       break;
-  //     }
-  //     case 'modified': {
-  //       if (oldIndex !== undefined) newContributions[oldIndex] = doc;
-  //       break;
-  //     }
-  //     case 'removed': {
-  //       if (oldIndex !== undefined) newContributions.splice(oldIndex, 1);
-  //       break;
-  //     }
-  //   }
-  //   setContributions(newContributions);
-  // }
-
-  // if (!loaded) {
-  //   //refreshCeremony()
-  //     .then(() => setLoaded(true));
-  // }
-
-  // if (!eventsListenerUnsub.current && ceremonyId) {
-  //   // Start ceremony listener
-  //   ceremonyEventListener(ceremonyId, statusUpdate)
-  //       .then(unsub => eventsListenerUnsub.current = unsub);
-  // }
-
-  // if (!ceremonyListenerUnsub.current && ceremonyId) {
-  //   // Start ceremony listener
-  //   ceremonyUpdateListener(ceremonyId, setCeremony)
-  //       .then(unsub => {ceremonyListenerUnsub.current = unsub;});
-  // }
-
-  // if (!loadingContributions.current && ceremonyId) {
-  //   // Start contribution listener
-  //   contributionUpdateListener(ceremonyId, updateContribution)
-  //       .then(unsub => contributionListenerUnsub.current = unsub);
-  //   loadingContributions.current = true;
-  // }
 
   const gridRows = ceremony?.contributionUpdates.map(v => {
     return {
@@ -163,10 +97,8 @@ export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
   }
 
   const contribStats = contributionStats();
-
-  const handleEdit = () => {
-    dispatch({ type: 'EDIT_CEREMONY', ceremonyId });
-  };
+  const { ceremonyState } = ceremony;
+  const { circuitStats } = ceremonyState;
 
   const handleClose = () => {
     ceremony?.stopKeepAlive();
@@ -192,15 +124,8 @@ export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
             <div style={{ width: '80%', display: 'flex' }}>
               <div style={{ marginLeft: 'auto' }}>
                 <CeremonyDetails 
-                  ceremony={ceremony} 
-                  numContCompleted={ceremony.ceremonyState.circuitStats.completed} 
-                  numContWaiting={ceremony.ceremonyState.circuitStats.waiting}
-                  transcript={ceremony.ceremonyState.circuitStats.transcript}
-                  lastVerified={ceremony.ceremonyState.circuitStats.lastVerified}
+                  index={ui.selectedIndex} 
                   openViewLog={openViewLog} />
-              </div>
-              <div style={{ float: 'right', marginLeft: 'auto' }}>
-                <Actions handleEdit={handleEdit} handleClose={handleClose} />
               </div>
             </div>
             <br />
@@ -224,45 +149,19 @@ export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
   );
 });
 
-const Actions = (props: {handleEdit: ()=>void, handleClose: ()=> void}) => {
-  return (
-    <AuthStateContext.Consumer>{Auth => {
-      return (<div>
-        {Auth.isCoordinator ?
-          (<Fab 
-            variant="round" 
-            onClick={props.handleEdit}
-            aria-label="edit">
-            <EditIcon />
-          </Fab>) 
-          : (<></>)
-        }
-        <Fab 
-          variant="round" 
-          onClick={props.handleClose}
-          aria-label="close">
-          <CloseIcon />
-        </Fab>
-      </div>
-      )}}
-    </AuthStateContext.Consumer>
-  );
-}
-
-const CeremonyDetails = (props: { 
-    ceremony: Ceremony, 
-    numContCompleted: number, 
-    numContWaiting: number, 
+const CeremonyDetails = observer((props: { 
+    index: number, 
     openViewLog: (c: string, i: any)=>void,
-    lastVerified: number,
-    transcript: string }) => {
-  //console.debug(`start ${props.ceremony.startTime}`);
+ }) => {
 
-  const status = ceremonyStatus(props.ceremony);
+  const { ceremony } = useContext(state) as State;
+  const { ceremonyState } = ceremony;
+  const { circuitStats } = ceremonyState;
+  const circuit = circuitStats[props.index];
 
   return (
     <CeremonyDetailsContainer>
-      <CeremonyTitle>{props.ceremony.title}</CeremonyTitle>
+      <CeremonyTitle>{circuit.name}</CeremonyTitle>
       <CeremonyDetailsSubSection>
         <Center>
           <CeremonyDetailsTable>
@@ -272,34 +171,18 @@ const CeremonyDetails = (props: {
                 <td className='content'>{status}</td>
               </tr>
               <tr>
-                <td className='title'>Start Time</td>
-                <td className='content'>{moment(props.ceremony.startTime).format('lll')}</td>
-              </tr>
-              <tr>
-                <td className='title'>End Time</td>
-                <td className='content'>{props.ceremony.endTime ? moment(props.ceremony.endTime).format('lll') : ''}</td>
-              </tr>
-              <tr>
-                <td className='title'>Minimum Participants</td>
-                <td className='content'>{props.ceremony.minParticipants}</td>
-              </tr>
-              <tr>
                 <td className='title'>Contributions</td>
-                <td className='content'>{props.numContCompleted} completed, {props.numContWaiting} waiting</td>
+                <td className='content'>{circuit.contributionCount} completed</td>
               </tr>
               <tr>
                 <td className='title'>Circuit File</td>
-                <td className='content'>{props.ceremony.circuitFileName}</td>
-              </tr>
-              <tr>
-                <td className='title'>Number of Constraints</td>
-                <td className='content'>{props.ceremony.numConstraints}</td>
+                <td className='content'>{circuit.name}</td>
               </tr>
               <tr>
                 <td className='title'>Verification Transcript</td>
                 <td className='content'>
                   <button 
-                    onClick={() => {props.openViewLog(props.transcript, props.lastVerified)}}
+                    onClick={() => {props.openViewLog(''/*TODO get transcript*/, circuit.contributionCount)}}
                     style={{ backgroundColor: lighterBackground, color: textColor, borderStyle: 'solid' }}
                   >view</button>
                 </td>
@@ -308,12 +191,9 @@ const CeremonyDetails = (props: {
           </CeremonyDetailsTable>
         </Center>
       </CeremonyDetailsSubSection>
-      <CeremonyDetailsSubSection>
-        {props.ceremony.description}
-      </CeremonyDetailsSubSection>
     </CeremonyDetailsContainer>
   );
-};
+});
 
 const getColumns = (openViewer: (s: string, n: any)=>void): GridColDef[] => {
 //  const cols = 
@@ -354,7 +234,7 @@ const getColumns = (openViewer: (s: string, n: any)=>void): GridColDef[] => {
           v ? 
             <button 
               onClick={() => {
-                openViewer(v?.toString(), params.getValue(1, 'queueIndex'))
+                openViewer(v?.toString(), params.row(1, 'queueIndex'))
               }}
               style={{ backgroundColor: lighterBackground, color: textColor, borderStyle: 'none' }}
             >view</button>
@@ -365,19 +245,20 @@ const getColumns = (openViewer: (s: string, n: any)=>void): GridColDef[] => {
   );
 };
 
-const ContributionsGrid = (props: { contributions: any[], openViewer: (s: string, i:any)=> void }): JSX.Element => {
-  //const classes = useStyles();
+const ContributionsGrid = observer((props: { contributions: any[], openViewer: (s: string, i:any)=> void }): JSX.Element => {
+  const { ceremony } = useContext(state) as State;
+  const { ceremonyState } = ceremony;
   const cols: GridColDef[] = getColumns(props.openViewer);
   return (
     <div style={{ height: 450, width: 800 }}>
       <Typography variant="h5" style={{ color: accentColor, background: lighterBackground }}>Contributions</Typography>
       <DataGrid 
-        rows={props.contributions} 
+        rows={ceremonyState.circuitStats} 
         columns={cols} 
-        pageSize={8}
+        autoPageSize
         rowHeight={40}
         sortingMode='server'
       />
     </div>
   );
-}
+});

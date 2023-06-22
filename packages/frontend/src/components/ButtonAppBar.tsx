@@ -3,7 +3,6 @@ import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/s
 import IconButton from '@material-ui/core/IconButton';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
@@ -27,7 +26,7 @@ import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
 import { State } from '../types/ceremony';
 
-const allowOptions = true; // if true, the 'Options' panel is available
+const allowOptions = false; // if true, the 'Options' panel is available
 
 interface ScrollProps {
   children: React.ReactElement;
@@ -198,7 +197,7 @@ const ButtonAppBar = observer(() => {
               {menuIcon}
             </IconButton>
             <MainMenu anchorEl={menuAnchorEl} handleClose={handleMenuClose} logout={handleLogout} />
-            <ZKTitle title={ceremony.project?.shortName} />
+            <ZKTitle title={ceremony.project} />
             {displayProgress ? 
               <div style={{ display: 'flex' }}>
                 {/*<NormalBodyText>Your contribution: </NormalBodyText>*/}

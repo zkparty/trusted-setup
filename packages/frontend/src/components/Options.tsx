@@ -1,16 +1,11 @@
 import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-//import { composeClasses } from '@material-ui/data-grid';
-//import { PlayCircleFilledWhite } from '@material-ui/icons';
 import * as React from 'react';
-import { Dispatch, useContext } from 'react';
-import { resetContributions } from '../api/FirestoreApi';
-import { AuthContextInterface, AuthDispatchContext, AuthStateContext } from '../state/AuthContext';
-import { ComputeDispatchContext, Step } from '../state/ComputeStateManager';
-import { accentColor, subtleText } from '../styles';
+import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { State } from '../types/ceremony';
+import state from '../contexts/state';
 import env from '../env';
-
-const allowReset = env.allowReset || false;
 
 function getModalStyle() {
     const top = 50;
@@ -43,42 +38,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const resetContribs = (participantId: string, onClose: () => void, dispatch?: Dispatch<any> ) => {
-    resetContributions(participantId);
-    if (dispatch) dispatch({ type: 'SET_STEP', data: Step.NOT_ACKNOWLEDGED });
-    onClose();
-};
-
-const resetButton = (participantId: string, close: ()=>void, dispatch: React.Dispatch<any> | undefined, classes: any): any => {
-    let button;
-    if (allowReset && participantId) {
-        button = (<Button 
-            variant='outlined'
-            onClick={() => {
-                resetContribs(participantId, close, dispatch )
-            }}
-            style={{ color: accentColor }}
-        >Reset Contributions
-            </Button>);
-    } else {
-        button = (<></>);
-    }
-
-    return button;
-}
-
-export default function Options(props: any) {
+// TODO - is this still needed?
+const Options = observer((props: any) => {
+    const { ui, ceremony } = useContext(state) as State;
     const classes = useStyles();
-    const dispatch = useContext(ComputeDispatchContext);
-    const authState = useContext(AuthStateContext);
-    const authDispatch = useContext(AuthDispatchContext);
 
-    const { authUser, manualAttestation } = authState;
+    const { authenticated, userId } = ceremony;
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (authDispatch) {
-            authDispatch({ type: 'MANUAL_ATTESTATION',  option: event.target.checked });
-        }
     };
     
     const manualAttest = (
@@ -87,10 +54,10 @@ export default function Options(props: any) {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={manualAttestation}
+                            checked={false}
                             onChange={handleOptionChange}
                             name="attest"
-                            disabled={authState.isLoggedIn}
+                            disabled={authenticated()}
                             className={classes.checkbox}
                         />
                     }
@@ -115,8 +82,9 @@ export default function Options(props: any) {
                 <div style={getModalStyle()} className={classes.paper}>
                     {manualAttest}                    
                     <br />
-                    {resetButton(authUser?.uid, props.close, dispatch, classes)}
                 </div>
             </Modal>
     );
-}
+});
+
+export default Options;

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect, useContext, } from "react";
+import { useState, useEffect, useContext, } from 'react';
 import {
     NormalBodyText,
     PanelTitle,
@@ -29,7 +28,7 @@ const CircuitsPanel = observer(() => {
   const { ceremony } = useContext(state) as State;
   const [viewWidth, setViewWidth] = useState(window.innerWidth);
 
-  const { ceremonyState, project, authenticated } = ceremony;
+  const { ceremonyState, authenticated } = ceremony;
   const { circuitStats } = ceremonyState;
 
   useEffect(() => {
