@@ -4,12 +4,10 @@ import {
     NormalBodyText,
     PanelTitle,
   } from "../styles";
-import { ComputeDispatchContext } from '../state/ComputeStateManager';
-import { startCircuitEventListener, startCircuitListener } from '../state/Circuits';
-import { AuthStateContext } from '../state/AuthContext';
 import CircuitsTable from './CircuitsTable';
-import state from '../state/state';
+import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
+import { State } from '../types/ceremony';
 
 const tableText = (isLoggedIn: boolean, circuitLength: number) => {
   return (
@@ -28,24 +26,11 @@ const tableText = (isLoggedIn: boolean, circuitLength: number) => {
 }
 
 const CircuitsPanel = observer(() => {
-  const { ceremony} = useContext(state);
-  const dispatch = useContext(ComputeDispatchContext);
-  const authState = useContext(AuthStateContext);
-  const [loaded, setLoaded] = useState(false);
+  const { ceremony } = useContext(state) as State;
   const [viewWidth, setViewWidth] = useState(window.innerWidth);
-  //console.debug(`render circuits table`);
 
-  const { circuits, project, projectId } = ceremony;
-  const { isLoggedIn, } = authState;
-
-  useEffect(() => {
-    if (!loaded && projectId && dispatch) {
-      // Get circuits. Listen for updates
-      startCircuitListener(projectId, dispatch);
-      startCircuitEventListener(dispatch);
-      setLoaded(true);
-    }
-  }, [loaded, projectId]);
+  const { ceremonyState, project, authenticated } = ceremony;
+  const { circuitStats } = ceremonyState;
 
   useEffect(() => {
     const handleResize = () => setViewWidth(window.innerWidth);
@@ -65,7 +50,7 @@ const CircuitsPanel = observer(() => {
     }}>
       <PanelTitle style={{
          paddingBottom: '6px',
-      }}>
+        }}>
         {`Circuits`}
       </PanelTitle>
       <NormalBodyText
@@ -73,9 +58,9 @@ const CircuitsPanel = observer(() => {
           maxWidth: viewWidth < 800 ? 'calc(100vw - 32px)' : '800px',
           paddingBottom: '64px'
         }}>
-        {tableText(isLoggedIn, circuits.length)}
+        {tableText(authenticated(), circuitStats.length)}
       </NormalBodyText>
-      <CircuitsTable isLoggedIn={isLoggedIn} circuits={circuits} />
+      <CircuitsTable />
     </div>
   )
 });

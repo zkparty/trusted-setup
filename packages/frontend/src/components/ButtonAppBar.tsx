@@ -21,7 +21,6 @@ import {
   lighterBackground,
 } from "../styles";
 import Options from './Options';
-import { ComputeStateContext, Step } from '../state/ComputeStateManager';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { CeremonyProgress } from './ProgressPanel';
 import state from '../contexts/state';

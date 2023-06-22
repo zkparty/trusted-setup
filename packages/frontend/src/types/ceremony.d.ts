@@ -170,6 +170,11 @@ export interface Project {
   coordinators: string[];
 }
 
+export interface Circuit {
+  name: string;
+  contributionCount: number;
+}
+
 export interface Queue {
   connection: boolean;
   client: any;
@@ -177,7 +182,7 @@ export interface Queue {
   connected: boolean;
   authToken: string;
   userId: string;
-  ceremonyState: any;
+  ceremonyState: { circuitStats: Circuit[] };
   queueLength: number;
   timeoutAt: number;
   activeContributor: string;
@@ -187,6 +192,7 @@ export interface Queue {
   loadingInitial: boolean;
   inQueue: boolean;
   isFinished: boolean;
+  project: string;
 
   contributionUpdates: any[];
 

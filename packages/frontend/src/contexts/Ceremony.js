@@ -20,6 +20,7 @@ export default class Queue {
   inQueue = false
   queueEntry = null
   activeQueueEntry = null
+  project = null
 
   contributionUpdates = []
 

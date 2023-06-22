@@ -100,13 +100,12 @@ interface ProgressProps {
   progressPct: number,
 }
 
-export const CeremonyProgress = (props: any) => {
+export const CeremonyProgress = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
   const { ceremonyState, contributionUpdates, inQueue, contributing } = ceremony;
   const cctCount = ceremonyState?.circuitStats.length;
-  const ceremonyx = ceremonyState ? ceremonyState.contributionState.ceremony : undefined;
-  const cctNum = ceremony ? ceremony.sequence || contributionCount : contributionCount;
-  const ceremonyPct = (cctCount>0) ? 100 * contributionCount / cctCount : 0;
+  const cctNum = contributionUpdates.length;
+  const ceremonyPct = (cctCount>0) ? 100 * cctNum / cctCount : 0;
   const { format } = props;
 
   const prefix = (format && format === 'bar') ?
@@ -134,7 +133,7 @@ export const CeremonyProgress = (props: any) => {
       </Box>
     </Box>
   );
-}
+});
 
 const StepProgress = observer(() => {
   const { ceremony } = useContext(state) as State;
