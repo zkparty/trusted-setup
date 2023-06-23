@@ -40,8 +40,11 @@ module.exports = (env, argv) => ({
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
         exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-react', '@babel/preset-typescript'],
+        },
       },
       {
         test: /\.(png|jpg|gif|svg|ico)$/i,
