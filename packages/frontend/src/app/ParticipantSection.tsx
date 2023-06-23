@@ -18,7 +18,7 @@ const ParticipantSection = observer(() => {
   const { authenticated, inQueue } = ceremony;
 
   let content = (<></>);
-  if (!authenticated()) {
+  if (!authenticated) {
     content = (<LoginPanel />);
   } else if (!inQueue) {
     // Display welcome text until the 'go ahead' button is clicked.

@@ -11,6 +11,7 @@ export default class Interface {
   screenWidth = -1
   screenHeight = -1
   isMobile = false
+  openModal = false
 
   constructor() {
     makeAutoObservable(this)

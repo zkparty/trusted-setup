@@ -102,7 +102,7 @@ const MainMenu = observer((props: MainMenuProps) => {
   const [openOptions, setOpenOptions] = useState(false);
   const { ceremony } = useContext(state) as State;
 
-  const enableLogout = (ceremony.authenticated());
+  const enableLogout = (ceremony.authenticated);
 
   const toggleOptions = () => {
     setOpenOptions(open => {
@@ -129,7 +129,7 @@ const MainMenu = observer((props: MainMenuProps) => {
           <StyledMenuItem>
             <ListItemText primary="Options" onClick={toggleOptions} style={{ color: textColor }} />
           </StyledMenuItem>
-          ) : (<></>)
+          ) : (<div></div>) 
         }
       </StyledMenu>
       <Options open={openOptions} close={toggleOptions} />
@@ -140,7 +140,7 @@ const MainMenu = observer((props: MainMenuProps) => {
 const LoginDetails = observer(() => {
   const { ceremony } = useContext(state) as State;
 
-  const userName = ceremony.authenticated() ? ceremony.userId : 'Connect';
+  const userName = ceremony.authenticated ? ceremony.userId : 'Connect';
 
   return (<span style={{ color: textColor }}>{userName}</span>);
 });

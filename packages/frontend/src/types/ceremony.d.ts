@@ -193,6 +193,7 @@ export interface Queue {
   inQueue: boolean;
   isFinished: boolean;
   project: string;
+  authenticated: boolean;
 
   contributionUpdates: any[];
 
@@ -200,7 +201,6 @@ export interface Queue {
 
   stopKeepAlive();
   auth();
-  authenticated();
   contributionText();
 }
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "",
-  "homepage": "",
+  "homepage": ".",
   "license": "ISC",
   "scripts": {
     "start": "webpack-dev-server",

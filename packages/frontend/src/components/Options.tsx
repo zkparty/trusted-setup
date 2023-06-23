@@ -57,7 +57,7 @@ const Options = observer((props: any) => {
                             checked={false}
                             onChange={handleOptionChange}
                             name="attest"
-                            disabled={authenticated()}
+                            disabled={authenticated}
                             className={classes.checkbox}
                         />
                     }

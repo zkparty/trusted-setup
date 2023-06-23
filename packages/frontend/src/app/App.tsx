@@ -14,11 +14,11 @@ const App = (props: AppProps) => {
     <div>
       <GlobalStyle />
       <LandingPage />
-      <Routes>
+      {/*<Routes>
         <Route path="/" >
           <Route index element={<LandingPage />} />
         </Route>
-      </Routes>
+      </Routes>*/}
       </div>
   );
 };

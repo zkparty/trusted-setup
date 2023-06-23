@@ -59,7 +59,6 @@ const CeremonyDetailsSubSection = styled.div`
 export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
   const { ceremony, ui } = useContext(state) as State
   const [loaded, setLoaded] = useState<boolean>(false);
-  const loadingContributions = useRef(false);
   const { enqueueSnackbar } = useSnackbar();
   const viewLogContent = useRef('');
   const viewLogIndex = useRef('');
@@ -78,25 +77,25 @@ export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
     }
   });
 
-  const contributionStats = (): {completed: number, waiting: number, lastVerified: number, transcript: string} => {
-    let result = {completed: 0, waiting: 0, lastVerified: -1, transcript: ''};
-    ceremony?.contributionUpdates.forEach(c => {
-      switch (c.status) {
-        case 'COMPLETE': {
-          result.completed++;
-          if (c.verification && c.queueIndex && c.queueIndex > result.lastVerified) {
-            result.lastVerified = c.queueIndex;
-            result.transcript = c.verification;
-          }
-          break;
-        }
-        case 'WAITING': result.waiting++; break;
-      }
-    });
-    return result;
-  }
+  // const contributionStats = (): {completed: number, waiting: number, lastVerified: number, transcript: string} => {
+  //   let result = {completed: 0, waiting: 0, lastVerified: -1, transcript: ''};
+  //   ceremony?.contributionUpdates.forEach(c => {
+  //     switch (c.status) {
+  //       case 'COMPLETE': {
+  //         result.completed++;
+  //         if (c.verification && c.queueIndex && c.queueIndex > result.lastVerified) {
+  //           result.lastVerified = c.queueIndex;
+  //           result.transcript = c.verification;
+  //         }
+  //         break;
+  //       }
+  //       case 'WAITING': result.waiting++; break;
+  //     }
+  //   });
+  //   return result;
+  // }
 
-  const contribStats = contributionStats();
+  //const contribStats = contributionStats();
   const { ceremonyState } = ceremony;
   const { circuitStats } = ceremonyState;
 

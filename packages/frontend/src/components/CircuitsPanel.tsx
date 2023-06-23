@@ -57,7 +57,7 @@ const CircuitsPanel = observer(() => {
           maxWidth: viewWidth < 800 ? 'calc(100vw - 32px)' : '800px',
           paddingBottom: '64px'
         }}>
-        {tableText(authenticated(), circuitStats.length)}
+        {tableText(authenticated, circuitStats?.length)}
       </NormalBodyText>
       <CircuitsTable />
     </div>

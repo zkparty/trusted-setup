@@ -55,7 +55,7 @@ const AboutPanel = observer((props: any) => {
     <ViewLog
       open={modalOpen}
       close={closeModal}
-      content={(<About isParticipant={authenticated()} />)}
+      content={(<About isParticipant={authenticated} />)}
       title={`About the ${project || env.projectName} trusted setup`} />
   :
     (<></>);

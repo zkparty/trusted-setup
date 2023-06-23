@@ -32,7 +32,7 @@ const HeaderCell = styled.div`
   background-color: #0E2936;
 `
 
-const TableRow = styled.div<{ completed?: boolean }>`
+const TableRow = styled.div<{ completed?: boolean}>`
   display: flex;
   width: 100%;
   color: ${(props) => props.completed ? accentColor: textColor};
@@ -44,6 +44,7 @@ const CircuitsTable = observer(() => {
   const [modalContent, setModalContent] = useState({title: (<></>), content: (<></>)});
 
   const { ceremonyState, contributionHashes, authenticated } = ceremony;
+  const { circuitStats } = ceremonyState;
 
   const closeTranscript = () => {setModalOpen(false)};
   const openTranscript = (title: JSX.Element, content: JSX.Element) => {
@@ -64,17 +65,17 @@ const CircuitsTable = observer(() => {
         <HeaderCell style={{ maxWidth: cellWidths[1] }}>Contributions</HeaderCell>
         <HeaderCell style={{ maxWidth: cellWidths[2] }}>Average Time</HeaderCell>
         <HeaderCell style={{ maxWidth: cellWidths[3] }}>Transcript</HeaderCell>
-        {authenticated() ?
+        {authenticated ?
           (<HeaderCell style={{ maxWidth: cellWidths[4] }}>My Hash</HeaderCell>)
           : null
         }
       </TableRow>
-      {ceremonyState.circuitStats.map((circuit, index) =>
+      {(circuitStats || []).map((circuit, index) =>
         renderRow(
           circuit, 
-          index < contributionHashes.length ? contributionHashes[index] : undefined, 
+          index < contributionHashes?.length ? contributionHashes[index] : undefined, 
           index+1, 
-          authenticated(), 
+          authenticated, 
           openTranscript, 
           cellWidths
         )
@@ -100,7 +101,7 @@ const renderRow = (
 
   const renderHash = (hash: string | undefined) => {
     let content = (<></>);
-    if (hash && hash.length > 0) {
+    if (hash && hash?.length > 0) {
       const hashBlockie = () => (
         <Blockies
           seed={hash} 
@@ -150,6 +151,7 @@ const renderRow = (
     };
     const linesToJsx = (content: string) => {
       const lines: string[] = content.split('\n');
+      console.log(`lines: ${lines}`)
       const body= lines.map(v =>
         (<p style={lineStyle}>{v}</p>));
       return (<div>{body}</div>);
@@ -171,7 +173,7 @@ const renderRow = (
             {CopyIcon}
           </span>
         </CopyToClipboard>
-        {linesToJsx(transcript)}
+        {linesToJsx(transcript || '')}
       </div>
     );
 
@@ -184,7 +186,7 @@ const renderRow = (
     <TableRow key={index} completed={completed}>
       <HeaderCell style={{ maxWidth: cellWidths[0] }}>{index}</HeaderCell>
       <HeaderCell style={{ maxWidth: cellWidths[1] }}>
-        {completed}
+        {completed ? 'Y' : 'N'}
       </HeaderCell>
       <HeaderCell style={{ maxWidth: cellWidths[2] }}>
       {/* formatDuration(circuit.averageSecondsPerContribution)<<<TODO */}

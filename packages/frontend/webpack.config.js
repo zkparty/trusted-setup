@@ -43,7 +43,8 @@ module.exports = (env, argv) => ({
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-react', '@babel/preset-typescript'],
+          presets: ['@babel/preset-typescript',
+            ["@babel/preset-react", {"runtime": "automatic"}]],
         },
       },
       {
