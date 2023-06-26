@@ -44,12 +44,10 @@ const LoginPanel = observer((props: any) => {
             <div style={{ width: '4px' }} />
           </div>
         </Tooltip>
-        <div style={{ height: '4px' }} />
-        <Button onClick={() => ceremony.join(name)}>Join!</Button>
       </div>
       {/*`The ceremony is not currently accepting contributions.`*/}  
     </NormalBodyText> 
-    <Login />
+    <Login onClick={() => ceremony.join(name)}/>
   </div>);
 });
 

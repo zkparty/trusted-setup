@@ -196,12 +196,12 @@ export interface Queue {
   authenticated: boolean;
 
   contributionUpdates: any[];
+  contributionText: string;
 
-  join: any;
-
+  join(name: string): void;
   stopKeepAlive();
   auth();
-  contributionText();
+  load();
 }
 
 declare interface State {

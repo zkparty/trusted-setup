@@ -27,7 +27,7 @@ export default class Queue {
   constructor(state) {
     makeAutoObservable(this)
     this.state = state
-    this.load()
+    //this.load()
   }
 
   get authenticated() {

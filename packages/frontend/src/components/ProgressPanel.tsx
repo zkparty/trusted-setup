@@ -13,7 +13,7 @@ import {
 } from "../styles";
 import { Player } from '@lottiefiles/react-lottie-player';
 import styled from 'styled-components';
-import VisibilitySensor from 'react-visibility-sensor';
+import VisibilitySensor from 'react-visibility-sensor-v2';
 import AttestationPanel from './AttestationPanel';
 import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
@@ -36,7 +36,7 @@ const StyledHeader = styled.div`
 `
 
 interface ProgressBarProps extends LinearProgressProps {
-  barColor?: string,
+  $barcolor?: string,
   $size?: string,
 }
 
@@ -51,8 +51,8 @@ const StyledProgressBar = styled(LinearProgress)<ProgressBarProps>`
 
   & > .MuiLinearProgress-barColorPrimary {
     border-radius: 20px;
-    background-color: ${({barColor}) => barColor || accentColor};
-    border-color: ${({barColor}) => barColor || accentColor};
+    background-color: ${({$barcolor: barColor}) => barColor || accentColor};
+    border-color: ${({$barcolor: barColor}) => barColor || accentColor};
   }
 
   &.MuiLinearProgress-root.MuiLinearProgress-colorPrimary {
@@ -103,8 +103,8 @@ interface ProgressProps {
 export const CeremonyProgress = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
   const { ceremonyState, contributionUpdates, inQueue, contributing } = ceremony;
-  const cctCount = ceremonyState?.circuitStats.length;
-  const cctNum = contributionUpdates.length;
+  const cctCount = ceremonyState?.circuitStats?.length;
+  const cctNum = contributionUpdates?.length;
   const ceremonyPct = (cctCount>0) ? 100 * cctNum / cctCount : 0;
   const { format } = props;
 
@@ -123,7 +123,7 @@ export const CeremonyProgress = observer((props: any) => {
           variant="determinate" 
           value={ceremonyPct} 
           $size="normal"
-          barColor={(inQueue) ? subtleText : accentColor}
+          $barcolor={(inQueue) ? subtleText : accentColor}
         />
       </Box>
       <Box minWidth={35}>
@@ -159,8 +159,8 @@ const Animation = () => {
 
 const status = (ceremony: Queue) => {
   const { ceremonyState, queueLength, contributionHashes, contributionUpdates, inQueue, contributing } = ceremony;
-  const cctNum = contributionHashes.length;
-  const cctCount = ceremonyState?.circuitStats.length;
+  const cctNum = contributionHashes?.length;
+  const cctCount = ceremonyState?.circuitStats?.length;
   let header = '';
   let body1 = (<></>);
   let body2 = (<></>);
@@ -186,7 +186,7 @@ const status = (ceremony: Queue) => {
       header = 'Contribution Active.';
       statusCell = (
         <div>
-          {contributionUpdates[contributionUpdates.length - 1]}
+          {contributionUpdates ? contributionUpdates[contributionUpdates.length - 1] : ''}
           <StepProgress />
         </div>
       );

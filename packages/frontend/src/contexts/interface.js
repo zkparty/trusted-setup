@@ -12,6 +12,7 @@ export default class Interface {
   screenHeight = -1
   isMobile = false
   openModal = false
+  progressIsVisible = false
 
   constructor() {
     makeAutoObservable(this)
@@ -50,5 +51,9 @@ export default class Interface {
       }
       this.modeCssClass = ''
     }
+  }
+
+  setProgressVisibility(isVisible) {
+    this.progressIsVisible = isVisible
   }
 }

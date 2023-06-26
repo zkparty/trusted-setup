@@ -17,8 +17,9 @@ const Acknowledge = ({ contribute }: { contribute: () => void}) =>
 
 const WelcomePanel = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
+  
   const handleClick = () => {
-    ceremony.auth();
+    ceremony.load();
   }
 
   const isRunning = true;

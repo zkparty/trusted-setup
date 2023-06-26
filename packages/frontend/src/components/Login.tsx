@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import { accentColor, lighterBackground } from "../styles";
-import { Button, Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
 import { AuthButton, AuthButtonText } from './../styles';
-import axios from 'axios';
 
-const Login = () => {
+const Login = (props: { onClick: () => void }) => {
 
   const handleEthereumLogin = async () => {
     // Check cookie
@@ -50,11 +48,10 @@ const Login = () => {
 
   return (
     <div>
-      <AuthButton onClick={handleEthereumLogin} style={{ marginTop: '78px', }}>
+      <AuthButton onClick={props.onClick} style={{ marginTop: '78px', }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <GitHubIcon htmlColor="#000" />
           <div style={{ width: '24px' }} />
-          <AuthButtonText>Login</AuthButtonText>
+          <AuthButtonText>Join</AuthButtonText>
         </div>
       </AuthButton>
       {/* <FormGroup row>

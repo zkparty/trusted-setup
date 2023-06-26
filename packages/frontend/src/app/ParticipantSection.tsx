@@ -15,16 +15,16 @@ const stepText = (step: string) => (<Typography align="center">{step}</Typograph
 const ParticipantSection = observer(() => {
   const { ceremony } = useContext(state) as State;
 
-  const { authenticated, inQueue } = ceremony;
+  const { authenticated, inQueue, userId, loadingInitial } = ceremony;
 
   let content = (<></>);
-  if (!authenticated) {
-    content = (<LoginPanel />);
-  } else if (!inQueue) {
+  if (loadingInitial) {
     // Display welcome text until the 'go ahead' button is clicked.
     content = (<WelcomePanel />);
+  } else if (!inQueue) {
+    content = (<LoginPanel />);
   } else {
-        content = (<ProgressPanel />);
+    content = (<ProgressPanel />);
   };
 
   return (

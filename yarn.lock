@@ -3338,6 +3338,7 @@
     prop-types "^15.8.1"
 
 "@mui/styled-engine-sc@^5.12.0", "@mui/styled-engine@^5.13.2", "@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
+  name "@mui/styled-engine"
   version "5.12.0"
   resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.12.0.tgz#41040fb27667efab46e9200cec9657e62b544c48"
   integrity sha512-3MgYoY2YG5tx0E5oKqvCv94oL0ABVBr+qpcyvciXW/v0wzPG6bXvuZV80GHYlJfasgnnRa1AbRWf5a9FcX8v6g==
@@ -9555,10 +9556,10 @@ react-transition-group@^4.4.0, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-visibility-sensor@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/react-visibility-sensor/-/react-visibility-sensor-5.1.1.tgz#5238380960d3a0b2be0b7faddff38541e337f5a9"
-  integrity sha512-cTUHqIK+zDYpeK19rzW6zF9YfT4486TIgizZW53wEZ+/GPBbK7cNS0EHyJVyHYacwFEvvHLEKfgJndbemWhB/w==
+react-visibility-sensor-v2@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-visibility-sensor-v2/-/react-visibility-sensor-v2-1.0.0.tgz#f74bb60b32c2f8a7efa5bf57de88fa2158b4e0b6"
+  integrity sha512-yEp5gxAGd3v/Z+9QT9ZmfVLQH4CEU6qhXnKvX2y0W++vtLskXLFs6RhMDKkBvA8z1mVmV6Jo1nHgts1ILZ/Vnw==
   dependencies:
     prop-types "^15.7.2"
 
