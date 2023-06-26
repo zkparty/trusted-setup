@@ -180,7 +180,7 @@ const renderRow = (
     showTranscript(title, body);
   }
 
-  const completed = (contributionHash !== undefined);
+  const completed = !!contributionHash;
 
   return (
     <TableRow key={index} completed={completed}>

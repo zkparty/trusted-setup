@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import Typography from "@material-ui/core/Typography";
+import { Typography } from "@mui/material";
 
 import { State } from "../types/ceremony";
 
@@ -15,13 +15,13 @@ const stepText = (step: string) => (<Typography align="center">{step}</Typograph
 const ParticipantSection = observer(() => {
   const { ceremony } = useContext(state) as State;
 
-  const { authenticated, inQueue, userId, loadingInitial } = ceremony;
+  const { inQueue, loadingInitial, contributionHashes, authenticated } = ceremony;
 
   let content = (<></>);
-  if (loadingInitial) {
+  if (loadingInitial || !authenticated ) {
     // Display welcome text until the 'go ahead' button is clicked.
     content = (<WelcomePanel />);
-  } else if (!inQueue) {
+  } else if (!inQueue && !(contributionHashes?.length>0)) {
     content = (<LoginPanel />);
   } else {
     content = (<ProgressPanel />);

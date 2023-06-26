@@ -40,12 +40,12 @@ const ptauPath = path.join(
 export const circuits = [
   {
     name: 'Semaphore 1',
-    zkeyPath: path.join(__dirname, '../circuits/semaphore_0001.zkey'),
+    zkeyPath: path.join(__dirname, '../circuits/semaphore01/semaphore_0001.zkey'),
     ptauPath,
   },
   {
     name: 'Semaphore 2',
-    zkeyPath: path.join(__dirname, '../circuits/semaphore_0002.zkey'),
+    zkeyPath: path.join(__dirname, '../circuits/semaphore02/semaphore_0002.zkey'),
     ptauPath,
   },
 ]
