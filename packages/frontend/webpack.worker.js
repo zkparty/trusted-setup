@@ -9,12 +9,12 @@ module.exports = (env, argv) => ({
   mode: 'production',
   target: 'webworker',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'index.js',
     publicPath: '/',
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.json'],
+    extensions: ['*', '.js', '.jsx', '.json', '.tsx', '.ts'],
     alias: {
       react: require.resolve('react'),
       mobx: require.resolve('mobx'),
@@ -34,11 +34,20 @@ module.exports = (env, argv) => ({
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-typescript',
+            ["@babel/preset-react", {"runtime": "automatic"}]],
+        },
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-react'],
+          presets: [['@babel/preset-react', {"runtime": "automatic"}]],
         },
       },
       {
