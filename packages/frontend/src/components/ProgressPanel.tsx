@@ -102,9 +102,9 @@ interface ProgressProps {
 
 export const CeremonyProgress = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
-  const { ceremonyState, contributionUpdates, inQueue, contributing } = ceremony;
+  const { ceremonyState, contributionHashes, inQueue, contributing } = ceremony;
   const cctCount = ceremonyState?.circuitStats?.length;
-  const cctNum = contributionUpdates?.length;
+  const cctNum = contributionHashes?.length || 0;
   const ceremonyPct = (cctCount>0) ? 100 * cctNum / cctCount : 0;
   const { format } = props;
 
@@ -137,8 +137,9 @@ export const CeremonyProgress = observer((props: any) => {
 
 const StepProgress = observer(() => {
   const { ceremony } = useContext(state) as State;
-  const cctNum = ceremony.contributionHashes.length;
-  const cctCount = ceremony.ceremonyState?.circuitStats.length;
+  const { contributionHashes, ceremonyState } = ceremony;
+  const cctNum = contributionHashes ? contributionHashes.length : 0;
+  const cctCount = ceremonyState?.circuitStats.length;
   const progressPct = cctNum / cctCount * 100;
   return (
     <StyledProgressBar variant="determinate" value={progressPct} $size='small' />
@@ -159,7 +160,7 @@ const Animation = () => {
 
 const status = (ceremony: Queue) => {
   const { ceremonyState, queueLength, contributionHashes, contributionUpdates, inQueue, contributing } = ceremony;
-  const cctNum = contributionHashes?.length;
+  const cctNum = (contributionHashes ? contributionHashes.length : 0) + 1;
   const cctCount = ceremonyState?.circuitStats?.length;
   let header = '';
   let body1 = (<></>);
