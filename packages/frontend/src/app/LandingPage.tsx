@@ -15,12 +15,13 @@ import CircuitsPanel from "../components/CircuitsPanel";
 import state from '../contexts/state';
 import { State } from "../types/ceremony";
 import { observer } from "mobx-react-lite";
+import { SnackbarProvider } from "notistack";
 
 export const LandingPage = observer(() => {
     const { ui } = useContext(state) as State;
 
     return (
-      <>
+      <SnackbarProvider maxSnack={5} preventDuplicate>
         <ButtonAppBar />
         <PageContainer>
           <Box style={{ height: '608px' }} >
@@ -39,6 +40,6 @@ export const LandingPage = observer(() => {
           </Modal>
         </PageContainer>
         <Footer />
-      </>
+      </SnackbarProvider>
   );
 });

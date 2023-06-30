@@ -9,8 +9,8 @@ import {
   CeremonyTitle,
   Center
 } from "../styles";
-import { CeremonyEvent, State } from "../types/ceremony";
-import { Typography } from "@material-ui/core";
+import { State } from "../types/ceremony";
+import { Typography } from "@mui/material";
 import moment from "moment";
 import './styles.css';
 import ViewLog from '../components/ViewLog';
@@ -64,9 +64,14 @@ export const CeremonyPage = observer((props: {onClose: ()=> void }) => {
   const viewLogIndex = useRef('');
   const [viewLogOpen, setOpenViewLog] = useState(false);
 
-   const statusUpdate = (event: CeremonyEvent) => {
-    enqueueSnackbar(event.message);
+  const statusUpdate = (message: string) => {
+    enqueueSnackbar(message);
   };
+
+  const { contributionUpdates } = ceremony;
+  if (contributionUpdates) {
+    statusUpdate(contributionUpdates[contributionUpdates.length - 1]);
+  }
 
   const gridRows = ceremony?.contributionUpdates.map(v => {
     return {
