@@ -172,7 +172,7 @@ const ButtonAppBar = observer(() => {
   const displayProgress = ((
     ceremony.inQueue || 
     ceremony.contributing)
-    && !ui.isProgressPanelVisible
+    && !ui.progressIsVisible
   );
 
   const menuIcon = (
