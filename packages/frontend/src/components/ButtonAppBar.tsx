@@ -1,13 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Menu, { MenuProps } from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from '@material-ui/core/Toolbar';
-import MenuIcon from '@material-ui/icons/MenuOutlined';
-import CloseIcon from '@material-ui/icons/Close';
+import { withStyles, makeStyles, createStyles, Theme, styled } from '@mui/material/styles';
+import { AppBar, ListItemText, Menu, MenuProps, MenuItem, IconButton, Toolbar, useScrollTrigger } from '@mui/material';
+import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 import { ZKTitle } from "./Title";
 import {
   accentColor,
@@ -20,7 +14,6 @@ import {
   lighterBackground,
 } from "../styles";
 import Options from './Options';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { CeremonyProgress } from './ProgressPanel';
 import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
@@ -45,29 +38,28 @@ function ElevationScroll(props: ScrollProps) {
   });
 }
 
-const StyledMenu = withStyles({
+const StyledMenu = styled(Menu, {
   paper: {
     border: `1px solid ${lighterBackground}`,
     background: background,
     color: accentColor,
   },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
+})`
+    elevation: 0,
+    getContentAnchorEl: null,
+    anchorOrigin: {
       vertical: 'bottom',
       horizontal: 'center',
-    }}
-    transformOrigin={{
+    },
+    transformOrigin: {
       vertical: 'top',
       horizontal: 'center',
-    }}
-    {...props}
-  />
-));
+    },
+  }
+`;
 
-const StyledMenuItem = withStyles((theme) => ({
+const StyledMenuItem = styled(MenuItem)
+  (() => ({
   root: {
     '&:focus': {
       backgroundColor: "unset",
@@ -76,7 +68,7 @@ const StyledMenuItem = withStyles((theme) => ({
       },
     },
   },
-}))(MenuItem);
+}));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -148,7 +140,7 @@ const LoginDetails = observer(() => {
 const ButtonAppBar = observer(() => {
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
   const { ceremony, ui } = useContext(state) as State;
-  const classes = useStyles();
+  //const classes = useStyles();
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     // Toggle menu
@@ -182,13 +174,13 @@ const ButtonAppBar = observer(() => {
   );
       
   return (
-    <div className={classes.root}>
+    <div /*className={root}*/>
       <ElevationScroll>
         <AppBar color='default'>
           <Toolbar>
             <IconButton 
               edge="start" 
-              className={classes.menuButton} 
+              /*className={MenuItemClasses.menuButton} */
               color="inherit" 
               aria-label="menu"
               aria-haspopup="true"

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { Typography } from "@mui/material";
+import { Typography } from '@mui/material';
 
 import { State } from "../types/ceremony";
 

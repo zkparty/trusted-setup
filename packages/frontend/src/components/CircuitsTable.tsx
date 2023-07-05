@@ -9,7 +9,7 @@ import {
   } from "../styles";
 //import './styles.css';
 import { Circuit, State } from "../types/ceremony";
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ViewLog from './ViewLog';

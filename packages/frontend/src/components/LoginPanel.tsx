@@ -5,8 +5,7 @@ import {
 } from "../styles";
 import Login from './Login';
 import env from '../env';
-import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
+import { Tooltip, Button } from '@mui/material';
 import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import state from "../contexts/state";

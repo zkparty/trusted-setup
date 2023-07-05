@@ -1,4 +1,4 @@
-import { Box, Grid, LinearProgress, LinearProgressProps, Typography } from '@material-ui/core';
+import { Box, Grid, LinearProgress, LinearProgressProps, Typography } from '@mui/material';
 import { useContext } from 'react';
 import {
   accentColor,

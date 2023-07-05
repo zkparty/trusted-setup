@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import GitHubIcon from "@material-ui/icons/GitHub";
+//import GitHubIcon from "@mui/material-icons/GitHub";
 import { accentColor, lighterBackground } from "../styles";
 import { AuthButton, AuthButtonText } from './../styles';
 

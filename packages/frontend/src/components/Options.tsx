@@ -1,5 +1,5 @@
-import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@mui/material';
+import { createStyles, makeStyles, Theme } from '@mui/material';
 import * as React from 'react';
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 // TODO - is this still needed?
 const Options = observer((props: any) => {
     const { ui, ceremony } = useContext(state) as State;
-    const classes = useStyles();
+    //const classes = useStyles();
 
     const { authenticated, userId } = ceremony;
 
@@ -58,13 +58,13 @@ const Options = observer((props: any) => {
                             onChange={handleOptionChange}
                             name="attest"
                             disabled={authenticated}
-                            className={classes.checkbox}
+                            /*className={classes.checkbox}*/
                         />
                     }
                     label="Manual attestation"
                     classes={{
-                        root: classes.checkbox,
-                        disabled: classes['checkbox:disabled'],
+                        /*root: classes.checkbox,
+                        disabled: classes['checkbox:disabled'],*/
                     }}
                     style={{ display: 'flex', alignItems: 'center', marginTop: '30px' }}
                 />
@@ -79,7 +79,7 @@ const Options = observer((props: any) => {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
-                <div style={getModalStyle()} className={classes.paper}>
+                <div style={getModalStyle()} /*className={classes.paper}*/>
                     {manualAttest}                    
                     <br />
                 </div>

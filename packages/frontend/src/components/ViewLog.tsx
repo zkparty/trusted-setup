@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import ContentModal from './ContentModal';
 
 export default function ViewLog(props: 
