@@ -1,5 +1,4 @@
 import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@mui/material';
-import { createStyles, makeStyles, Theme } from '@mui/material';
 import * as React from 'react';
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -18,25 +17,25 @@ function getModalStyle() {
     };
 };
   
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            position: 'absolute',
-            width: 600,
-            backgroundColor: 'black',
-            border: '2px solid #fff',
-            boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3),
-        },
-        checkbox: {
-            color: 'white',
-        },
-        'checkbox:disabled': {
-            color: 'white',
-            opacity: 0.5,
-        }
-    }),
-);
+// const useStyles = makeStyles((theme: Theme) =>
+//     createStyles({
+//         paper: {
+//             position: 'absolute',
+//             width: 600,
+//             backgroundColor: 'black',
+//             border: '2px solid #fff',
+//             boxShadow: theme.shadows[5],
+//             padding: theme.spacing(2, 4, 3),
+//         },
+//         checkbox: {
+//             color: 'white',
+//         },
+//         'checkbox:disabled': {
+//             color: 'white',
+//             opacity: 0.5,
+//         }
+//     }),
+// );
 
 // TODO - is this still needed?
 const Options = observer((props: any) => {

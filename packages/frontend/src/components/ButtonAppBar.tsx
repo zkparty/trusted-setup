@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { withStyles, makeStyles, createStyles, Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { AppBar, ListItemText, Menu, MenuProps, MenuItem, IconButton, Toolbar, useScrollTrigger } from '@mui/material';
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 import { ZKTitle } from "./Title";
@@ -70,19 +70,19 @@ const StyledMenuItem = styled(MenuItem)
   },
 }));
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     root: {
+//       flexGrow: 1,
+//     },
+//     menuButton: {
+//       marginRight: theme.spacing(2),
+//     },
+//     title: {
+//       flexGrow: 1,
+//     },
+//   }),
+// );
 
 interface MainMenuProps {
   anchorEl: Element | ((element: Element) => Element) | null | undefined; 
