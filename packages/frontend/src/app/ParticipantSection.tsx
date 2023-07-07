@@ -9,6 +9,7 @@ import LoginPanel from "../components/LoginPanel";
 import state from '../contexts/state';
 import { observer } from 'mobx-react-lite';
 import { useSnackbar } from "notistack";
+import AttestationPanel from "../components/AttestationPanel";
 
 
 const stepText = (step: string) => (<Typography align="center">{step}</Typography>);
@@ -17,7 +18,7 @@ const ParticipantSection = observer(() => {
   const { ceremony } = useContext(state) as State;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { inQueue, loadingInitial, contributionHashes, authenticated } = ceremony;
+  const { inQueue, loadingInitial, contributionHashes, authenticated, ceremonyState } = ceremony;
 
   const statusUpdate = (message: string) => {
     enqueueSnackbar(message);
@@ -28,13 +29,19 @@ const ParticipantSection = observer(() => {
     statusUpdate(contributionUpdates[contributionUpdates.length - 1]);
   }
 
+  const { circuitStats } = ceremonyState;
+  const done = (contributionHashes 
+    ? (Object.keys(contributionHashes).length >= circuitStats?.length)
+    : false);
 
   let content = (<></>);
   if (loadingInitial || !authenticated ) {
     // Display welcome text until the 'go ahead' button is clicked.
     content = (<WelcomePanel />);
-  } else if (!inQueue && !(contributionHashes?.length>0)) {
+  } else if (!inQueue && !(contributionHashes?.length>0) && !done) {
     content = (<LoginPanel />);
+  } else if (done) {
+    content = (<AttestationPanel />);
   } else {
     content = (<ProgressPanel />);
   };
