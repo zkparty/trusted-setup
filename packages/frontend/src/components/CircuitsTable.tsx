@@ -58,6 +58,7 @@ const CircuitsTable = observer(() => {
     '140px',
     '193px',
   ]
+  const hashKeys = contributionHashes ? Object.keys(contributionHashes) : [];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       <TableRow>
@@ -73,8 +74,8 @@ const CircuitsTable = observer(() => {
       {(circuitStats || []).map((circuit, index) =>
         renderRow(
           circuit, 
-          index < contributionHashes?.length ? contributionHashes[index] : undefined, 
-          index+1, 
+          index < hashKeys.length ? hashKeys[index] : undefined, 
+          circuit.name || index.toString(), 
           authenticated, 
           openTranscript, 
           cellWidths
@@ -93,7 +94,7 @@ const CircuitsTable = observer(() => {
 const renderRow = (
   circuit: Circuit,
   contributionHash: string | undefined,
-  index: number,
+  index: string,
   isSignedIn: boolean,
   showTranscript: (title: JSX.Element, body: JSX.Element) => void,
   cellWidths: string[]
@@ -129,7 +130,7 @@ const renderRow = (
     return moment.duration(avgSecs, 'seconds').humanize();
   }
 
-  const formatTranscript = (circuit: Circuit, index: number) => {
+  const formatTranscript = (circuit: Circuit, index: string) => {
     const { name } = circuit;
     // TODO How to get transcript?
     const transcript = "";

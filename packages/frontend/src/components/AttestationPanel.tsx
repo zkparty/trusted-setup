@@ -44,43 +44,41 @@ const StyledButton = styled.a`
   text-decoration: none;
 `
 
-const tweetText = (settings: any, url: string): string => {
+const tweetText = (text: any, url?: string): string => {
   const EOL = '\n';
-  const body = encodeURIComponent(settings.tweetTemplate.replace('{URL}', url).replaceAll('{EOL}', EOL));
+  const body = encodeURIComponent(text.replace('{URL}', url).replaceAll('{EOL}', EOL));
 
   return `https://twitter.com/intent/tweet?text=${body}`;
 }
 
 
-const AttestationPanel = observer((props: any) => {
+const AttestationPanel = observer(() => {
   const { ceremony } = useContext(state) as State;
   const { contributionText, project } = ceremony;
 
   let text=(<></>);
-  if (project) {
-    if (contributionText) {
-      text = (
-        <div style={{ display: 'flex' }}>
-          <StyledAccentButton
-            href={tweetText(ceremony.project, contributionText)} target='twitter' >
-                <TwitterIcon fontSize='large' />
-                Share your attestation
-          </StyledAccentButton>
-          <StyledButton href={contributionText} target='attestation' >
-            View your summary
-          </StyledButton>
-        </div>
-      );
-    } else {
-      text = (<div style={{ textAlign: 'left' }}>
-          Your attestation details have been copied to the clipboard. Please
-          paste them to a public gist. &nbsp;
-          <a href='https://gist.github.com' 
-            target='attestation' 
-            style={{ color: 'lightseagreen' }} 
-          >Click here</a> to create your gist (opens a new tab).
-        </div>);
-    }
+  if (contributionText) {
+    text = (
+      <div style={{ display: 'flex' }}>
+        <StyledAccentButton
+          href={tweetText(contributionText)} target='twitter' >
+              <TwitterIcon fontSize='large' />
+              Share your attestation
+        </StyledAccentButton>
+        <StyledButton href={contributionText} target='attestation' >
+          View your summary
+        </StyledButton>
+      </div>
+    );
+  } else {
+    text = (<div style={{ textAlign: 'left' }}>
+        Your attestation details have been copied to the clipboard. Please
+        paste them to a public gist. &nbsp;
+        <a href='https://gist.github.com' 
+          target='attestation' 
+          style={{ color: 'lightseagreen' }} 
+        >Click here</a> to create your gist (opens a new tab).
+      </div>);
   }
 
   return (

@@ -10,7 +10,6 @@ import {
   Toolbar,
   useScrollTrigger,
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material'
 import { ZKTitle } from './Title'
 import {
@@ -79,19 +78,19 @@ const StyledMenuItem = styled(MenuItem)(() => ({
   },
 }))
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  })
-)
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     root: {
+//       flexGrow: 1,
+//     },
+//     menuButton: {
+//       marginRight: theme.spacing(2),
+//     },
+//     title: {
+//       flexGrow: 1,
+//     },
+//   }),
+// );
 
 interface MainMenuProps {
   anchorEl: Element | ((element: Element) => Element) | null | undefined
