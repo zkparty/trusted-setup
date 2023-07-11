@@ -75,7 +75,7 @@ const CircuitsTable = observer(() => {
         renderRow(
           circuit, 
           index < hashKeys.length ? hashKeys[index] : undefined, 
-          index + ' ' + circuit.name, 
+          circuit.name || index.toString(), 
           authenticated, 
           openTranscript, 
           cellWidths

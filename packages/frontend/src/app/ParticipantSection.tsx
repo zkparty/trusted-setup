@@ -25,9 +25,11 @@ const ParticipantSection = observer(() => {
   };
 
   const { contributionUpdates } = ceremony;
-  if (contributionUpdates.length > 0) {
-    statusUpdate(contributionUpdates[contributionUpdates.length - 1]);
-  }
+  useEffect(() => {
+    if (contributionUpdates.length > 0) {
+      statusUpdate(contributionUpdates[contributionUpdates.length - 1]);
+    }  
+  }, [contributionUpdates.length] );
 
   const { circuitStats } = ceremonyState;
   const done = (contributionHashes 
