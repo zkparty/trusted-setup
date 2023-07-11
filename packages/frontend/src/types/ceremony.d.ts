@@ -211,6 +211,7 @@ export interface Entropy {
 
 declare interface State {
   ceremony: Queue
+  entropy: Entropy
   ui: any
 }
 
