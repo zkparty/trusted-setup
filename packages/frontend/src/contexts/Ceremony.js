@@ -148,6 +148,7 @@ ${hashText}
           this.contributionName || 'anonymous contributor',
           Array(32)
             .fill(null)
+            // TODO NICO: use the generated entropy
             .map(() => randomf(2n ** 256n))
             .join('')
         )
