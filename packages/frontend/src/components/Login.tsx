@@ -61,7 +61,6 @@ const Login = (props: Props) => {
             justifyContent: 'center',
           }}
         >
-          <div style={{ width: '24px' }} />
           <AuthButtonText>Join</AuthButtonText>
         </div>
       </AuthButton>
