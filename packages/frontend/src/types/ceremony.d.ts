@@ -207,6 +207,7 @@ export interface Queue {
 export interface Entropy {
   secret: string
   setSecret(secret: string): void
+  generateEntropy(): void
 }
 
 declare interface State {

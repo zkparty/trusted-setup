@@ -12,22 +12,17 @@ const LoginPanel = observer((props: any) => {
   const [name, setName] = useState('')
   const { ui, entropy, ceremony } = useContext(state) as State
   const [inputText, setInputText] = useState('')
-  const [mouseCoordinate, setMouseCoordinate] = useState([0, 0])
 
   const onChangeInput = (e: any) => {
     setInputText(e.target.value)
-    console.log(e.target.value)
   }
 
   const onMoveDiv = (e: any) => {
-    // TODO-NICO: we need to save all coordinates and their timestamp
-    setMouseCoordinate([e.clientX, e.clientY])
-    console.log(e.clientX, e.clientY)
+    const secret = inputText + e.clientX + e.clientY + performance.now()
+    entropy.setSecret(`${entropy.secret}${secret}`)
   }
 
   const onClickJoin = () => {
-    const secret = inputText + mouseCoordinate[0] + mouseCoordinate[1]
-    entropy.setSecret(secret)
     ceremony.join(name)
     console.log('join ceremony')
   }
