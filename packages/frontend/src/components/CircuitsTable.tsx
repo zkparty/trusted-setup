@@ -9,7 +9,7 @@ import {
 } from '../styles'
 //import './styles.css';
 import { Circuit, State } from '../types/ceremony'
-import { Button } from '@mui/material'
+import { Tooltip, Button } from '@mui/material'
 import styled from 'styled-components'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ViewLog from './ViewLog'
@@ -103,7 +103,11 @@ const renderRow = (
     let content = <></>
     if (hash && hash?.length > 0) {
       const hashBlockie = () => (
-        <Blockies seed={hash} size={10} scale={4} className="identicon" />
+        <Tooltip title={hash}>
+          <div>
+            <Blockies seed={hash} size={10} scale={4} className="identicon" />
+          </div>
+        </Tooltip>
       )
       content = (
         <CopyToClipboard text={hash}>
