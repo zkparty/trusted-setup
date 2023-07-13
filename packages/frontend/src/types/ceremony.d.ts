@@ -204,6 +204,7 @@ export interface Queue {
   stopKeepAlive()
   auth()
   load()
+  connect()
 }
 
 export interface Entropy {
