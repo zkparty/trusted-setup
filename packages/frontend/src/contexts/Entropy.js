@@ -39,7 +39,7 @@ export default class Entropy {
     )
     const expandedEntropyInt = BigInt('0x' + hex96)
     const secretInt = expandedEntropyInt % CURVE.r
-    const secretHex = secretInt.toString(16).padStart(64, '0')
+    const secretHex = secretInt.toString(16).padStart(32, '0')
     return secretHex
   }
 }

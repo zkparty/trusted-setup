@@ -13,6 +13,7 @@ export default class Queue {
   ceremonyState = {}
   queueLength = 0
   timeoutAt = null
+  entropy = null
   contributing = false
   contributionName = null
   contributionHashes = null
@@ -106,9 +107,10 @@ ${hashText}
     this.ingestState(data)
   }
 
-  async join(name) {
+  async join(name, entropy) {
     this.contributionHashes = null
     this.contributionName = name.trim()
+    this.entropy = entropy
     // join the queue
     const { data: _data } = await this.client.send('ceremony.join', {
       token: this.authToken,
@@ -159,11 +161,7 @@ ${hashText}
           latest,
           out,
           this.contributionName || 'anonymous contributor',
-          Array(32)
-            .fill(null)
-            // TODO NICO: use the generated entropy
-            .map(() => randomf(2n ** 256n))
-            .join('')
+          this.entropy
         )
         if (this.activeContributor !== this.userId) break
         this.updateContributionStatus(`Uploading ${circuitName} contribution`)
@@ -185,6 +183,7 @@ ${hashText}
       this.contributing = false
       this.inQueue = false
       this.authToken = null
+      this.entropy = null
     } catch (err) {
       console.log('Error making contribution')
       console.log(err)
