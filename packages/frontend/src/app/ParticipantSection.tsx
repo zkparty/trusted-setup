@@ -1,58 +1,56 @@
-import { useContext, useEffect, useRef } from "react";
-import { Typography } from '@mui/material';
+import { useContext, useEffect } from 'react'
+import { Typography } from '@mui/material'
 
-import { State } from "../types/ceremony";
+import { State } from '../types/ceremony'
 
-import WelcomePanel from "../components/WelcomePanel";
-import ProgressPanel from "../components/ProgressPanel";
-import LoginPanel from "../components/LoginPanel";
-import state from '../contexts/state';
-import { observer } from 'mobx-react-lite';
-import { useSnackbar } from "notistack";
-import AttestationPanel from "../components/AttestationPanel";
+import WelcomePanel from '../components/WelcomePanel'
+import ProgressPanel from '../components/ProgressPanel'
+import LoginPanel from '../components/LoginPanel'
+import state from '../contexts/state'
+import { observer } from 'mobx-react-lite'
+import { useSnackbar } from 'notistack'
+import AttestationPanel from '../components/AttestationPanel'
 
-
-const stepText = (step: string) => (<Typography align="center">{step}</Typography>);
+const stepText = (step: string) => (
+  <Typography align="center">{step}</Typography>
+)
 
 const ParticipantSection = observer(() => {
-  const { ceremony } = useContext(state) as State;
-  const { enqueueSnackbar } = useSnackbar();
+  const { ceremony } = useContext(state) as State
+  const { enqueueSnackbar } = useSnackbar()
 
-  const { inQueue, loadingInitial, contributionHashes, authenticated, ceremonyState } = ceremony;
+  const { inQueue, loadingInitial, contributionHashes, ceremonyState } =
+    ceremony
 
   const statusUpdate = (message: string) => {
-    enqueueSnackbar(message);
-  };
+    enqueueSnackbar(message)
+  }
 
-  const { contributionUpdates } = ceremony;
+  const { contributionUpdates } = ceremony
   useEffect(() => {
     if (contributionUpdates.length > 0) {
-      statusUpdate(contributionUpdates[contributionUpdates.length - 1]);
-    }  
-  }, [contributionUpdates.length] );
+      statusUpdate(contributionUpdates[contributionUpdates.length - 1])
+    }
+  }, [contributionUpdates.length])
 
-  const { circuitStats } = ceremonyState;
-  const done = (contributionHashes 
-    ? (Object.keys(contributionHashes).length >= circuitStats?.length)
-    : false);
+  const { circuitStats } = ceremonyState
+  const done = contributionHashes
+    ? Object.keys(contributionHashes).length >= circuitStats?.length
+    : false
 
-  let content = (<></>);
-  if (loadingInitial || !authenticated ) {
+  let content = <></>
+  if (loadingInitial) {
     // Display welcome text until the 'go ahead' button is clicked.
-    content = (<WelcomePanel />);
-  } else if (!inQueue && !(contributionHashes?.length>0) && !done) {
-    content = (<LoginPanel />);
+    content = <WelcomePanel />
+  } else if (!inQueue && !(contributionHashes?.length > 0) && !done) {
+    content = <LoginPanel />
   } else if (done) {
-    content = (<AttestationPanel />);
+    content = <AttestationPanel />
   } else {
-    content = (<ProgressPanel />);
-  };
+    content = <ProgressPanel />
+  }
 
-  return (
-    <div>
-      {content}
-    </div>
-  );
-});
+  return <div>{content}</div>
+})
 
-export default ParticipantSection;
+export default ParticipantSection

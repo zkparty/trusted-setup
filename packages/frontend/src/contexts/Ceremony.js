@@ -58,13 +58,26 @@ ${hashText}
       this.ingestState(JSON.parse(window.CEREMONY_STATE))
     }
     await this.connect()
-    this.authToken = localStorage.getItem('authToken')
+    this.authToken = sessionStorage.getItem('authToken')
     // don't block here
     this.loadState().catch(console.log)
     if (!this.authenticated) await this.auth()
-    const { data } = await this.client.send('user.info', {
-      token: this.authToken,
-    })
+    let data = null
+    try {
+      const result = await this.client.send('user.info', {
+        token: this.authToken,
+      })
+      data = result.data
+    } catch (error) {
+      // in case the auth token is from another old ceremony
+      if (error.message === 'unauthorized') {
+        await this.auth()
+        const result = await this.client.send('user.info', {
+          token: this.authToken,
+        })
+        data = result.data
+      }
+    }
     this.inQueue = data.inQueue
     if (data.inQueue) {
       this.timeoutAt = data.timeoutAt
@@ -171,6 +184,7 @@ ${hashText}
       this.timeoutAt = null
       this.contributing = false
       this.inQueue = false
+      this.authToken = null
     } catch (err) {
       console.log('Error making contribution')
       console.log(err)
@@ -248,7 +262,7 @@ ${hashText}
 
   async auth() {
     const { data } = await this.client.send('user.register')
-    localStorage.setItem('authToken', data.token)
+    sessionStorage.setItem('authToken', data.token)
     this.authToken = data.token
     this.userId = data.userId
   }
