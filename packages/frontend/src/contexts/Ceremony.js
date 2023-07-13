@@ -18,6 +18,7 @@ export default class Queue {
   contributionName = null
   contributionHashes = null
   loadingInitial = true
+  numberOfCircuits = 0
   inQueue = false
   queueEntry = null
   activeQueueEntry = null
@@ -79,6 +80,7 @@ ${hashText}
         data = result.data
       }
     }
+    this.numberOfCircuits = Object.keys(data.latestContributions).length
     this.inQueue = data.inQueue
     if (data.inQueue) {
       this.timeoutAt = data.timeoutAt
@@ -149,6 +151,7 @@ ${hashText}
       )
       const uploadPromises = []
       const contributionHashes = {}
+      let i = 0
       for (const [circuitName, id] of Object.entries(
         data.latestContributions
       )) {
@@ -161,12 +164,13 @@ ${hashText}
           latest,
           out,
           this.contributionName || 'anonymous contributor',
-          this.entropy
+          this.entropy[i]
         )
         if (this.activeContributor !== this.userId) break
         this.updateContributionStatus(`Uploading ${circuitName} contribution`)
         uploadPromises.push(this.uploadContribution(out.data, circuitName))
         contributionHashes[circuitName] = formatHash(hash)
+        i = i + 1
       }
       try {
         await Promise.all(uploadPromises)
@@ -181,6 +185,7 @@ ${hashText}
       this.stopKeepalive()
       this.timeoutAt = null
       this.contributing = false
+      this.numberOfCircuits = 0
       this.inQueue = false
       this.authToken = null
       this.entropy = null

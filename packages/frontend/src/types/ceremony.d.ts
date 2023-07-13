@@ -186,11 +186,12 @@ export interface Queue {
   queueLength: number
   timeoutAt: number
   activeContributor: string
-  entropy: string
+  entropy: string[]
   contributing: boolean
   contributionName: string
   contributionHashes: string[]
   loadingInitial: boolean
+  numberOfCircuits: number
   inQueue: boolean
   isFinished: boolean
   project: string
@@ -199,7 +200,7 @@ export interface Queue {
   contributionUpdates: any[]
   contributionText: string
 
-  join(name: string, entropy: string): void
+  join(name: string, entropy: string[]): void
   stopKeepAlive()
   auth()
   load()
@@ -208,7 +209,7 @@ export interface Queue {
 export interface Entropy {
   secret: string
   setSecret(secret: string): void
-  generateEntropy(): string
+  generateEntropy(numberOfCircuits: number): string[]
 }
 
 declare interface State {

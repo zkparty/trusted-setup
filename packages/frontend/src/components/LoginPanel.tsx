@@ -23,7 +23,7 @@ const LoginPanel = observer((props: any) => {
   }
 
   const onClickJoin = () => {
-    ceremony.join(name, entropy.generateEntropy())
+    ceremony.join(name, entropy.generateEntropy(ceremony.numberOfCircuits))
     console.log('join ceremony')
   }
 
