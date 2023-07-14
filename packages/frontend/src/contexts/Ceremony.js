@@ -13,10 +13,12 @@ export default class Queue {
   ceremonyState = {}
   queueLength = 0
   timeoutAt = null
+  entropy = null
   contributing = false
   contributionName = null
   contributionHashes = null
   loadingInitial = true
+  numberOfCircuits = 0
   inQueue = false
   queueEntry = null
   activeQueueEntry = null
@@ -58,13 +60,27 @@ ${hashText}
       this.ingestState(JSON.parse(window.CEREMONY_STATE))
     }
     await this.connect()
-    this.authToken = localStorage.getItem('authToken')
+    this.authToken = sessionStorage.getItem('authToken')
     // don't block here
     this.loadState().catch(console.log)
     if (!this.authenticated) await this.auth()
-    const { data } = await this.client.send('user.info', {
-      token: this.authToken,
-    })
+    let data = null
+    try {
+      const result = await this.client.send('user.info', {
+        token: this.authToken,
+      })
+      data = result.data
+    } catch (error) {
+      // in case the auth token is from another old ceremony
+      if (error.message === 'unauthorized') {
+        await this.auth()
+        const result = await this.client.send('user.info', {
+          token: this.authToken,
+        })
+        data = result.data
+      }
+    }
+    this.numberOfCircuits = Object.keys(data.latestContributions).length
     this.inQueue = data.inQueue
     if (data.inQueue) {
       this.timeoutAt = data.timeoutAt
@@ -93,9 +109,10 @@ ${hashText}
     this.ingestState(data)
   }
 
-  async join(name) {
+  async join(name, entropy) {
     this.contributionHashes = null
     this.contributionName = name.trim()
+    this.entropy = entropy
     // join the queue
     const { data: _data } = await this.client.send('ceremony.join', {
       token: this.authToken,
@@ -134,6 +151,7 @@ ${hashText}
       )
       const uploadPromises = []
       const contributionHashes = {}
+      let i = 0
       for (const [circuitName, id] of Object.entries(
         data.latestContributions
       )) {
@@ -146,15 +164,13 @@ ${hashText}
           latest,
           out,
           this.contributionName || 'anonymous contributor',
-          Array(32)
-            .fill(null)
-            .map(() => randomf(2n ** 256n))
-            .join('')
+          this.entropy[i]
         )
         if (this.activeContributor !== this.userId) break
         this.updateContributionStatus(`Uploading ${circuitName} contribution`)
         uploadPromises.push(this.uploadContribution(out.data, circuitName))
         contributionHashes[circuitName] = formatHash(hash)
+        i = i + 1
       }
       try {
         await Promise.all(uploadPromises)
@@ -169,7 +185,10 @@ ${hashText}
       this.stopKeepalive()
       this.timeoutAt = null
       this.contributing = false
+      this.numberOfCircuits = 0
       this.inQueue = false
+      this.authToken = null
+      this.entropy = null
     } catch (err) {
       console.log('Error making contribution')
       console.log(err)
@@ -247,7 +266,7 @@ ${hashText}
 
   async auth() {
     const { data } = await this.client.send('user.register')
-    localStorage.setItem('authToken', data.token)
+    sessionStorage.setItem('authToken', data.token)
     this.authToken = data.token
     this.userId = data.userId
   }
