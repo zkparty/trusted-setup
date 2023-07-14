@@ -196,6 +196,8 @@ export interface Queue {
   isFinished: boolean
   project: string
   authenticated: boolean
+  step?: string 
+  numberOfCircuits: number
 
   contributionUpdates: any[]
   contributionText: string

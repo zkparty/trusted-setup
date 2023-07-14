@@ -102,10 +102,9 @@ interface ProgressProps {
 
 export const CeremonyProgress = observer((props: any) => {
   const { ceremony } = useContext(state) as State;
-  const { ceremonyState, contributionHashes, inQueue, contributing } = ceremony;
-  const cctCount = ceremonyState?.circuitStats?.length;
+  const { contributionHashes, inQueue, contributing, numberOfCircuits } = ceremony;
   const cctNum = contributionHashes?.length || 0;
-  const ceremonyPct = (cctCount>0) ? 100 * cctNum / cctCount : 0;
+  const ceremonyPct = (numberOfCircuits>0) ? 100 * cctNum / numberOfCircuits : 100;
   const { format } = props;
 
   const prefix = (format && format === 'bar') ?
@@ -135,12 +134,20 @@ export const CeremonyProgress = observer((props: any) => {
   );
 });
 
+const stepToProgress = (step?: string) => {
+  switch (step) {
+    case 'downloading': return 0
+    case 'computing': return 30
+    case 'uploading': return 80
+    default : return 100
+  }
+}
+
 const StepProgress = observer(() => {
   const { ceremony } = useContext(state) as State;
-  const { contributionHashes, ceremonyState } = ceremony;
-  const cctNum = contributionHashes ? contributionHashes.length : 0;
-  const cctCount = ceremonyState?.circuitStats.length;
-  const progressPct = cctNum / cctCount * 100;
+  const { step } = ceremony;
+  // TODO downloads/uploads happen in parallel. Need a better way to show progress.
+  const progressPct = stepToProgress(step);
   return (
     <StyledProgressBar variant="determinate" value={progressPct} $size='small' />
   );
@@ -159,18 +166,17 @@ const Animation = () => {
 }
 
 const status = (ceremony: Queue) => {
-  const { ceremonyState, queueLength, contributionHashes, contributionUpdates, inQueue, contributing } = ceremony;
+  const { queueLength, contributionHashes, contributionUpdates, inQueue, contributing, numberOfCircuits } = ceremony;
   const cctNum = (contributionHashes ? contributionHashes.length : 0) + 1;
-  const cctCount = ceremonyState?.circuitStats?.length;
   let header = '';
   let body1 = (<></>);
   let body2 = (<></>);
-  if (cctNum >= cctCount) {
+  if (cctNum >= numberOfCircuits) {
     header = 'Contribution Complete.';
     body1 = (
       <div>
         <NormalBodyText>
-        You've successfully contributed to {cctCount} circuits.
+        You've successfully contributed to {numberOfCircuits} circuits.
         </NormalBodyText>
         <br />
         <NormalBodyText>
@@ -217,7 +223,7 @@ const status = (ceremony: Queue) => {
             </Grid>
             <Grid item>
               <NormalBodyText>
-                {cctNum}/{cctCount}
+                {cctNum}/{numberOfCircuits}
               </NormalBodyText>
             </Grid>
           </Grid>

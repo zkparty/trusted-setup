@@ -23,6 +23,7 @@ export default class Queue {
   queueEntry = null
   activeQueueEntry = null
   project = null
+  step = null
 
   contributionUpdates = []
 
@@ -131,6 +132,7 @@ ${hashText}
   async contribute() {
     if (this.contributing) return
     this.contributing = true
+    this.step = 'downloading'
     console.log('starting contribution')
     try {
       const snarkjs = await import('snarkjs')
@@ -157,6 +159,7 @@ ${hashText}
       )) {
         console.log(circuitName, id)
         const latest = await downloadPromises[circuitName]
+        this.step = 'computing'
         const out = { type: 'mem' }
         if (this.activeContributor !== this.userId) break
         this.updateContributionStatus(`Computing ${circuitName} contribution`)
@@ -168,6 +171,7 @@ ${hashText}
         )
         if (this.activeContributor !== this.userId) break
         this.updateContributionStatus(`Uploading ${circuitName} contribution`)
+        this.step = 'uploading'
         uploadPromises.push(this.uploadContribution(out.data, circuitName))
         contributionHashes[circuitName] = formatHash(hash)
         i = i + 1
@@ -182,6 +186,7 @@ ${hashText}
           `! One or more contributions failed to process !`
         )
       }
+      this.step = 'done'
       this.stopKeepalive()
       this.timeoutAt = null
       this.contributing = false
