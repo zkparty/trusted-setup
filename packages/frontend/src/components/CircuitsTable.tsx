@@ -187,8 +187,8 @@ const renderRow = (
   const completed = !!contributionHash
 
   return (
-    <TableRow key={index} completed={completed}>
-      <HeaderCell style={{ maxWidth: cellWidths[0] }}>{index}</HeaderCell>
+    <TableRow key={index} completed={completed.toString()}>
+      <HeaderCell style={{ maxWidth: cellWidths[0] }}>{index}</HeaderCell> 
       <HeaderCell style={{ maxWidth: cellWidths[1] }}>
         {completed ? 'Y' : 'N'}
       </HeaderCell>
