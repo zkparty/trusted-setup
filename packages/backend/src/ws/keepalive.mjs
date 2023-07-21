@@ -29,6 +29,7 @@ export default ({ wsApp, db, ceremony }) => {
       index: { lt: queueEntry.index },
     })
     send({
+      queueLength: await ceremony.queueLength(),
       timeoutAt,
       queuePosition,
     })
