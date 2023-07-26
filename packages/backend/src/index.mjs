@@ -9,7 +9,9 @@ import { SQLiteConnector } from 'anondb/node.js'
 import Ceremony from './daemons/ceremony.mjs'
 import Backup from './daemons/backup.mjs'
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+let __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+__dirname = path.normalize(__dirname)
+console.log(`dirname: ${__dirname}`)
 
 // the application db
 const db = await SQLiteConnector.create(schema, dbpath('app.db'))
@@ -55,10 +57,10 @@ await importFunctionDirectory('http', state)
 // name relative to file location
 async function importFunctionDirectory(dirname, state) {
   // import all non-index files from __dirname/name this folder
-  const routeDir = path.join(__dirname, dirname)
+  const routeDir = path.join(__dirname, dirname) 
   const routes = await fs.promises.readdir(routeDir)
   for (const routeFile of routes) {
-    const { default: route } = await import(path.join(routeDir, routeFile))
+    const { default: route } = await import(path.join(__dirname.replace('C:\\', 'file:///c:/'), dirname, routeFile))
     route(state)
   }
 }

@@ -6,7 +6,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = (env, argv) => ({
-  entry: ['./src/index.jsx'],
+  entry: ['./src/index.tsx'],
   mode: 'development',
   devServer: {
     port: 3000,
@@ -23,7 +23,7 @@ module.exports = (env, argv) => ({
     publicPath: '/',
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.json'],
+    extensions: ['*', '.js', '.jsx', '.json', '.tsx', '.ts'],
     fallback: {
       path: require.resolve('path-browserify'),
       crypto: require.resolve('crypto-browserify'),
@@ -39,11 +39,12 @@ module.exports = (env, argv) => ({
   module: {
     rules: [
       {
-        test: /\.jsx$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-react'],
+          presets: ['@babel/preset-typescript',
+            ["@babel/preset-react", {"runtime": "automatic"}]],
         },
       },
       {

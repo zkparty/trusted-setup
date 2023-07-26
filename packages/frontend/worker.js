@@ -4,7 +4,6 @@ import {
 } from '@cloudflare/kv-asset-handler'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import Home from './src/pages/Home'
 import Header from './src/pages/Header'
 import state, { buildState } from './src/contexts/state'
 import { SERVER } from './src/config'
@@ -48,7 +47,6 @@ async function ssr() {
   const app = ReactDOMServer.renderToString(
     <state.Provider value={_state}>
       <Header />
-      <Home />
     </state.Provider>
   )
   const finalIndex = indexHtml
