@@ -62,7 +62,7 @@ export const ATTESTATION_URL =
 
 const ptauPath = path.join(
   __dirname,
-  '../circuits/powersOfTau28_hez_final_17.ptau'
+  '../circuits/powersOfTau28_hez_final_14.ptau'
 )
 
 export const authOptions = [
@@ -128,32 +128,22 @@ export const queues = [
 export const circuits = [
   {
     name: 'Sign Up',
-    zkeyPath: path.join(__dirname, '../circuits/signup.zkey'),
+    zkeyPath: path.join(__dirname, '../circuits/rln_0000.zkey'),
     ptauPath,
   },
   {
-    name: 'User State Transition',
-    zkeyPath: path.join(__dirname, '../circuits/userStateTransition.zkey'),
+    name: 'Semaphore01',
+    zkeyPath: path.join(__dirname, '../circuits/semaphore01/semaphore_0001.zkey'),
     ptauPath,
   },
   {
-    name: 'Epoch Key Lite',
-    zkeyPath: path.join(__dirname, '../circuits/epochKeyLite.zkey'),
+    name: 'Semaphore02',
+    zkeyPath: path.join(__dirname, '../circuits/semaphore02/semaphore_0002.zkey'),
     ptauPath,
   },
   {
-    name: 'Epoch Key',
-    zkeyPath: path.join(__dirname, '../circuits/epochKey.zkey'),
-    ptauPath,
-  },
-  {
-    name: 'Prove Reputation',
-    zkeyPath: path.join(__dirname, '../circuits/proveReputation.zkey'),
-    ptauPath,
-  },
-  {
-    name: 'Double Action',
-    zkeyPath: path.join(__dirname, '../circuits/preventDoubleAction.zkey'),
+    name: 'Withdraw',
+    zkeyPath: path.join(__dirname, '../circuits/withdraw/withdraw_0000.zkey'),
     ptauPath,
   },
 ]
