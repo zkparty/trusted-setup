@@ -127,7 +127,7 @@ export const queues = [
 
 export const circuits = [
   {
-    name: 'Sign Up',
+    name: 'RLN1',
     zkeyPath: path.join(__dirname, '../circuits/rln_0000.zkey'),
     ptauPath,
   },

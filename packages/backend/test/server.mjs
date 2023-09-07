@@ -3,7 +3,7 @@ import githubMockPort from './githubMock.mjs'
 
 process.env.WS_PORT = await getPort()
 process.env.HTTP_PORT = await getPort()
-process.env.KEEPALIVE_INTERVAL = 4 * 1000
+process.env.KEEPALIVE_INTERVAL = 25 * 1000
 process.env.PRUNE_INTERVAL = 4 * 1000
 process.env.CONTRIBUTION_TIMEOUT = 40 * 1000
 process.env.WS_SERVER = `ws://127.0.0.1:${process.env.WS_PORT}`

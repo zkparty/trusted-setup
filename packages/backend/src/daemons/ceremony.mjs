@@ -9,6 +9,8 @@ import {
 export default class Ceremony {
   constructor(state) {
     this.state = state
+    console.log(`keepalive interval ${KEEPALIVE_INTERVAL}`)
+    console.log(`prune interval ${PRUNE_INTERVAL}`)
     this.start()
   }
 
@@ -159,6 +161,10 @@ export default class Ceremony {
     })
     if (prunedCount > 0) {
       console.log(`pruned ${prunedCount} entries`)
+      const activeCount = await this.state.db.count('CeremonyQueue', {
+        completedAt: { eq: null },
+      })
+      console.log(`active count=${activeCount}`)
     }
     if (
       currentContributor &&

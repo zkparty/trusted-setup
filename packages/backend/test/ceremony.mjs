@@ -120,6 +120,7 @@ export default class Ceremony {
   async startKeepalive() {
     if (!this.connected) throw new Error('Not connected')
     const _keepaliveTimer = randomf(2n ** 256n).toString(16)
+    console.log(`keepalive timer ${_keepaliveTimer.toString()}`)
     this.keepaliveTimer = _keepaliveTimer
     if (!this.timeoutAt) {
       const { data } = await this.client.send('user.info', {
@@ -127,6 +128,7 @@ export default class Ceremony {
       })
       this.inQueue = data.inQueue
       if (!data.inQueue) {
+        console.log(`not in queue error: ${JSON.stringify(data)}`)
         throw new Error('not in queue')
       }
       if (this.keepaliveTimer !== _keepaliveTimer) return
@@ -139,12 +141,13 @@ export default class Ceremony {
       await new Promise((r) => setTimeout(r, nextPing))
       if (this.keepaliveTimer !== _keepaliveTimer) return
       try {
+        //console.log(`sending keepalive ${this.keepaliveTimer}`)
         const { data } = await this.client.send('ceremony.keepalive', {
           token: this.authToken,
         })
         this.timeoutAt = data.timeoutAt
       } catch (err) {
-        console.log('Keepalive errored')
+        console.log('Keepalive errored')        
         console.log(err)
         this.keepaliveTimer = null
         this.timeoutAt = null

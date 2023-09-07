@@ -12,6 +12,7 @@ test.serial('should use multiple queues', async (t) => {
     ({ name }) =>
       name !== 'discord' && name !== 'open' && name !== 'github-30-year'
   )
+  console.log(`# queues: ${queues.length}`)
 
   const perQueue = 2
   const contributors = []
@@ -34,6 +35,7 @@ test.serial('should use multiple queues', async (t) => {
     keepalivePromises.push(ceremony.startKeepalive())
     contributors.push(ceremony)
   }
+  console.log(`# contributors ${contributors.length}`)
   {
     const { data } = await _ceremony.client.send('ceremony.state')
     for (const queue of queues) {
@@ -49,6 +51,8 @@ test.serial('should use multiple queues', async (t) => {
     const nextContributorIndex = contributors.findIndex((c) => {
       return c.queueIndex === activeQueueIndex
     })
+    console.log(`nextContribIndex ${nextContributorIndex}`)
+    // end of queue
     if (nextContributorIndex === -1) {
       activeQueueIndex = (activeQueueIndex + 1) % queues.length
       continue
@@ -67,6 +71,7 @@ test.serial('should use multiple queues', async (t) => {
     contributors.splice(nextContributorIndex, 1)
     // do the contribution
     const hashes = await nextContributor.contribute()
+    console.log(`done contribution ${nextContributor.userId}`)
     contributionHashes.push(hashes)
     activeQueueIndex = (activeQueueIndex + 1) % queues.length
   }
